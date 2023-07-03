@@ -24,7 +24,7 @@ public class EBook {
     private Long id;
 
     @Column(columnDefinition = "default 'EBOOK'")
-    private BookType bookType;
+    private String bookType;
 
     @Column(nullable = false)
     private String bookTitle;

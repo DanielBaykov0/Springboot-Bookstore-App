@@ -24,7 +24,7 @@ public class PaperBook {
     private Long id;
 
     @Column(columnDefinition = "default 'PAPER'")
-    private BookType bookType;
+    private String bookType;
 
     @Column(nullable = false)
     private String bookTitle;
