@@ -1,6 +1,5 @@
-package baykov.daniel.springbootlibraryapp.entities;
+package baykov.daniel.springbootlibraryapp.payload.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +11,9 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "authors")
-public class Author {
+public class AuthorDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
     private String authorFirstName;
     private String authorLastName;
     private String authorCountryBorn;
