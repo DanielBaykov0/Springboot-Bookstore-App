@@ -10,4 +10,5 @@ public class AppConstants {
     public static final String DEFAULT_SORT_DIR = "asc";
     public static final String AUTHOR_DELETE_MESSAGE = "Author was deleted successfully!";
     public static final String EBOOK_DELETE_MESSAGE = "EBook was deleted successfully!";
+    public static final String PAPER_BOOK_DELETE_MESSAGE = "Book was deleted successfully!";
 }
