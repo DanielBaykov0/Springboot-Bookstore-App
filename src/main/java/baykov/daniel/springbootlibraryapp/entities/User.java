@@ -6,8 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -28,6 +27,7 @@ public class User {
     private String password;
     private String name;
     private int userAge;
+    private LocalDate dateOfBirth;
     private String userGender;
     private String userAddress;
     private String userCity;
@@ -36,9 +36,6 @@ public class User {
     @Column(nullable = false)
     private String userEmail;
 
-    @Column(columnDefinition = "boolean default false")
+    @Column(columnDefinition = "boolean default false", nullable = false)
     private boolean GDPR;
-    private Map<Integer, PaperBook> paperBookList;
-    private List<EBook> eBookReadList;
-    private List<EBook> eBookDownloadedList;
 }
