@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
-    private AuthorRepository authorRepository;
-    private ModelMapper mapper;
+    private final AuthorRepository authorRepository;
+    private final ModelMapper mapper;
 
     public AuthorServiceImpl(AuthorRepository authorRepository, ModelMapper mapper) {
         this.authorRepository = authorRepository;
@@ -72,7 +72,7 @@ public class AuthorServiceImpl implements AuthorService {
         author.setAuthorAlive(authorDTO.isAuthorAlive());
 
         Author newAuthor = authorRepository.save(author);
-        return mapToDTO(author);
+        return mapToDTO(newAuthor);
     }
 
     @Override
