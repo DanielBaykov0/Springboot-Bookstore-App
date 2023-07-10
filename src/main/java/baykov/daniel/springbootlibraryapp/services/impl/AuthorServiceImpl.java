@@ -64,12 +64,12 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public AuthorDTO updateAuthorById(AuthorDTO authorDTO, long id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Author", "id", id));
-        author.setAuthorFirstName(authorDTO.getAuthorFirstName());
-        author.setAuthorLastName(authorDTO.getAuthorLastName());
-        author.setAuthorCountryBorn(authorDTO.getAuthorCountryBorn());
-        author.setAuthorBirthDate(authorDTO.getAuthorBirthDate());
-        author.setAuthorDeathDate(authorDTO.getAuthorDeathDate());
-        author.setAuthorAlive(authorDTO.isAuthorAlive());
+        author.setFirstName(authorDTO.getAuthorFirstName());
+        author.setLastName(authorDTO.getAuthorLastName());
+        author.setCountryBorn(authorDTO.getAuthorCountryBorn());
+        author.setBirthDate(authorDTO.getAuthorBirthDate());
+        author.setDeathDate(authorDTO.getAuthorDeathDate());
+        author.setAlive(authorDTO.isAuthorAlive());
 
         Author newAuthor = authorRepository.save(author);
         return mapToDTO(newAuthor);

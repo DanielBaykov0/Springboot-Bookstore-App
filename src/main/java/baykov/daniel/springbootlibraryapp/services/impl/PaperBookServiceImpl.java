@@ -64,13 +64,13 @@ public class PaperBookServiceImpl implements PaperBookService {
     @Override
     public PaperBookDTO updatePaperBook(PaperBookDTO paperBookDTO, long id) {
         PaperBook paperBook = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
-        paperBook.setBookTitle(paperBookDTO.getBookTitle());
-        paperBook.setBookAuthor(paperBookDTO.getBookAuthor());
-        paperBook.setBookGenre(paperBookDTO.getBookGenre());
-        paperBook.setBookDescription(paperBookDTO.getBookDescription());
+        paperBook.setTitle(paperBookDTO.getBookTitle());
+        paperBook.setAuthor(paperBookDTO.getBookAuthor());
+        paperBook.setGenre(paperBookDTO.getBookGenre());
+        paperBook.setDescription(paperBookDTO.getBookDescription());
         paperBook.setBorrowedDate(paperBookDTO.getBorrowedDate());
-        paperBook.setPaperBookNumberOfCopiesTotal(paperBookDTO.getPaperBookNumberOfCopiesTotal());
-        paperBook.setPaperBookNumberOfCopiesAvailable(paperBookDTO.getPaperBookNumberOfCopiesAvailable());
+        paperBook.setNumberOfCopiesTotal(paperBookDTO.getPaperBookNumberOfCopiesTotal());
+        paperBook.setNumberOfCopiesAvailable(paperBookDTO.getPaperBookNumberOfCopiesAvailable());
         paperBook.setISBN(paperBookDTO.getISBN());
         paperBook.setBookType("PAPER");
 
@@ -87,13 +87,13 @@ public class PaperBookServiceImpl implements PaperBookService {
     @Override
     public void updateNumberOfBooksAfterBorrowing(Long id) {
         PaperBook paperBook = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
-        paperBook.setPaperBookNumberOfCopiesAvailable(paperBook.getPaperBookNumberOfCopiesAvailable() - 1);
+        paperBook.setNumberOfCopiesAvailable(paperBook.getNumberOfCopiesAvailable() - 1);
     }
 
     @Override
     public void updateNumberOfBooksAfterReturning(Long id) {
         PaperBook paperBook = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
-        paperBook.setPaperBookNumberOfCopiesAvailable(paperBook.getPaperBookNumberOfCopiesAvailable() + 1);
+        paperBook.setNumberOfCopiesAvailable(paperBook.getNumberOfCopiesAvailable() + 1);
     }
 
     private PaperBook mapToEntity(PaperBookDTO paperBookDTO) {

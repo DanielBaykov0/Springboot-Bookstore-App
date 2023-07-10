@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,13 +27,14 @@ public class User {
     @Column(nullable = false)
     private String password;
     private String name;
-    private int userAge;
+    private int age;
     private LocalDate dateOfBirth;
-    private String userGender;
-    private String userAddress;
-    private String userCity;
-    private String userCounty;
+    private String gender;
+    private String address;
+    private String city;
+    private String county;
 
     @Column(nullable = false)
-    private String userEmail;
+    private String email;
+    private Set<Role> roles;
 }

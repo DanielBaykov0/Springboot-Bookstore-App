@@ -27,14 +27,14 @@ public class EBook {
     private String bookType;
 
     @Column(nullable = false)
-    private String bookTitle;
+    private String title;
 
     @Column(nullable = false)
-    private String bookAuthor;
+    private Author author;
 
     @Column(nullable = false)
-    private String bookGenre;
-    private String bookDescription;
+    private String genre;
+    private String description;
 
     @Column(unique = true, nullable = false)
     private com.github.ladutsko.isbn.ISBN ISBN;
@@ -47,6 +47,6 @@ public class EBook {
         }
     }
 
-    private String eBookReadOnlineLink;
-    private String eBookDownloadLink;
+    private String readingLink;
+    private String downloadLink;
 }

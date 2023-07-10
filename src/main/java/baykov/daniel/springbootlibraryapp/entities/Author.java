@@ -21,10 +21,10 @@ public class Author {
     private Long id;
 
     @Column(nullable = false)
-    private String authorFirstName;
-    private String authorLastName;
-    private String authorCountryBorn;
-    private LocalDate authorBirthDate;
-    private boolean isAuthorAlive;
-    private LocalDate authorDeathDate;
+    private String firstName;
+    private String lastName;
+    private String countryBorn;
+    private LocalDate birthDate;
+    private boolean isAlive;
+    private LocalDate deathDate;
 }

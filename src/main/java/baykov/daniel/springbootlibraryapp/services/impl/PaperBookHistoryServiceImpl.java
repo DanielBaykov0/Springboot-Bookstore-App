@@ -54,7 +54,7 @@ public class PaperBookHistoryServiceImpl implements PaperBookHistoryService {
         PaperBook paperBook = paperBookRepository.findById(bookId)
                 .orElseThrow(() -> new ResourceNotFoundException("Book", "id", bookId));
 
-        if (paperBook.getPaperBookNumberOfCopiesAvailable() < 1) {
+        if (paperBook.getNumberOfCopiesAvailable() < 1) {
             throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.NO_BOOKS_AVAILABLE_MESSAGE);
         }
 
