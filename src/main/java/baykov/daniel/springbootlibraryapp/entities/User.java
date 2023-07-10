@@ -35,7 +35,4 @@ public class User {
 
     @Column(nullable = false)
     private String userEmail;
-
-    @Column(columnDefinition = "boolean default false", nullable = false)
-    private boolean GDPR;
 }
