@@ -64,12 +64,12 @@ public class EBookServiceImpl implements EBookService {
     @Override
     public EBookDTO updateEBook(EBookDTO eBookDTO, long id) {
         EBook eBook = eBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("EBook", "id", id));
-        eBook.setTitle(eBookDTO.getBookTitle());
-        eBook.setAuthor(eBookDTO.getBookAuthor());
-        eBook.setGenre(eBookDTO.getBookGenre());
-        eBook.setDescription(eBookDTO.getBookDescription());
-        eBook.setDownloadLink(eBookDTO.getEBookDownloadLink());
-        eBook.setReadingLink(eBookDTO.getEBookReadOnlineLink());
+        eBook.setTitle(eBookDTO.getTitle());
+        eBook.setAuthor(eBookDTO.getAuthor());
+        eBook.setGenre(eBookDTO.getGenre());
+        eBook.setDescription(eBookDTO.getDescription());
+        eBook.setDownloadLink(eBookDTO.getDownloadLink());
+        eBook.setReadingLink(eBookDTO.getReadingLink());
         eBook.setISBN(eBookDTO.getISBN());
         eBook.setBookType("EBOOK");
         return mapToDTO(eBook);

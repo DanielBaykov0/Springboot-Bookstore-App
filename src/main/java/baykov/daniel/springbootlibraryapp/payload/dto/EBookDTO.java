@@ -1,5 +1,6 @@
 package baykov.daniel.springbootlibraryapp.payload.dto;
 
+import baykov.daniel.springbootlibraryapp.entities.Author;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,16 +16,17 @@ public class EBookDTO {
 
     private String bookType;
 
-    private String bookTitle;
+    private String title;
 
-    private String bookAuthor;
+    private Author author;
 
-    private String bookGenre;
-    private String bookDescription;
+    private String genre;
+    private String description;
 
     private com.github.ladutsko.isbn.ISBN ISBN;
 
+    private String readingLink;
+    private String downloadLink;
 
-    private String eBookReadOnlineLink;
-    private String eBookDownloadLink;
+
 }

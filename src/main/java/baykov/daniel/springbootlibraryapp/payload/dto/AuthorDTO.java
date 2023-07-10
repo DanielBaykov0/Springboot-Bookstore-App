@@ -14,10 +14,10 @@ import java.time.LocalDate;
 public class AuthorDTO {
 
     private Long id;
-    private String authorFirstName;
-    private String authorLastName;
-    private String authorCountryBorn;
-    private LocalDate authorBirthDate;
-    private boolean isAuthorAlive;
-    private LocalDate authorDeathDate;
+    private String firstName;
+    private String lastName;
+    private String countryBorn;
+    private LocalDate birthDate;
+    private boolean isAlive;
+    private LocalDate deathDate;
 }

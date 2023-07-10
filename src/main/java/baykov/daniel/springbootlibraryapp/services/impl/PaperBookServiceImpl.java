@@ -64,13 +64,13 @@ public class PaperBookServiceImpl implements PaperBookService {
     @Override
     public PaperBookDTO updatePaperBook(PaperBookDTO paperBookDTO, long id) {
         PaperBook paperBook = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
-        paperBook.setTitle(paperBookDTO.getBookTitle());
-        paperBook.setAuthor(paperBookDTO.getBookAuthor());
-        paperBook.setGenre(paperBookDTO.getBookGenre());
-        paperBook.setDescription(paperBookDTO.getBookDescription());
+        paperBook.setTitle(paperBookDTO.getTitle());
+        paperBook.setAuthor(paperBookDTO.getAuthor());
+        paperBook.setGenre(paperBookDTO.getGenre());
+        paperBook.setDescription(paperBookDTO.getDescription());
         paperBook.setBorrowedDate(paperBookDTO.getBorrowedDate());
-        paperBook.setNumberOfCopiesTotal(paperBookDTO.getPaperBookNumberOfCopiesTotal());
-        paperBook.setNumberOfCopiesAvailable(paperBookDTO.getPaperBookNumberOfCopiesAvailable());
+        paperBook.setNumberOfCopiesTotal(paperBookDTO.getNumberOfCopiesTotal());
+        paperBook.setNumberOfCopiesAvailable(paperBookDTO.getNumberOfCopiesAvailable());
         paperBook.setISBN(paperBookDTO.getISBN());
         paperBook.setBookType("PAPER");
 
