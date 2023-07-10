@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "e_books")
+@Table(name = "ebooks")
 public class EBook {
 
     @Id

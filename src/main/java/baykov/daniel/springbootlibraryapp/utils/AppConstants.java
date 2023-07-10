@@ -19,4 +19,5 @@ public class AppConstants {
     public static final String BOOK_ALREADY_RETURNED_MESSAGE = "The book is already returned!";
     public static final String INVALID_POSTPONE_DAYS_MESSAGE = "The postpone days must be greater than 0!";
     public static final String LIMIT_POSTPONE_DAYS_MESSAGE = "The postpone date must be up to 14 days from the borrow date!";
+    public static final String INVALID_USER_AND_EBOOK_MESSAGE = "User and EBook don't match!";
 }

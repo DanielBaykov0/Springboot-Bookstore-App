@@ -12,10 +12,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user_history")
+@Table(name = "ebook_history")
 public class EBookHistory {
 
     private Long id;
     private User user;
     private EBook eBook;
+    private boolean isRead;
+    private boolean isDownloaded;
 }
