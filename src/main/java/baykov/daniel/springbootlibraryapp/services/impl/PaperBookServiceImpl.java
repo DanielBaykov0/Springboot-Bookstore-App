@@ -84,6 +84,18 @@ public class PaperBookServiceImpl implements PaperBookService {
         paperBookRepository.delete(paperBook);
     }
 
+    @Override
+    public void updateNumberOfBooksAfterBorrowing(Long id) {
+        PaperBook paperBook = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+        paperBook.setPaperBookNumberOfCopiesAvailable(paperBook.getPaperBookNumberOfCopiesAvailable() - 1);
+    }
+
+    @Override
+    public void updateNumberOfBooksAfterReturning(Long id) {
+        PaperBook paperBook = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+        paperBook.setPaperBookNumberOfCopiesAvailable(paperBook.getPaperBookNumberOfCopiesAvailable() + 1);
+    }
+
     private PaperBook mapToEntity(PaperBookDTO paperBookDTO) {
         return mapper.map(paperBookDTO, PaperBook.class);
     }

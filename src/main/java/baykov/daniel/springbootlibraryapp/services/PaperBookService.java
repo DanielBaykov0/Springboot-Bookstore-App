@@ -14,4 +14,8 @@ public interface PaperBookService {
     PaperBookDTO updatePaperBook(PaperBookDTO paperBookDTO, long id);
 
     void deletePaperBook(long id);
+
+    void updateNumberOfBooksAfterBorrowing(Long id);
+
+    void updateNumberOfBooksAfterReturning(Long id);
 }
