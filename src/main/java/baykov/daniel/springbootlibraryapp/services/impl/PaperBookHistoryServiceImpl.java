@@ -1,15 +1,15 @@
 package baykov.daniel.springbootlibraryapp.services.impl;
 
-import baykov.daniel.springbootlibraryapp.entities.BorrowPaperBookHistory;
+import baykov.daniel.springbootlibraryapp.entities.PaperBookHistory;
 import baykov.daniel.springbootlibraryapp.entities.PaperBook;
 import baykov.daniel.springbootlibraryapp.entities.User;
 import baykov.daniel.springbootlibraryapp.exceptions.LibraryHTTPException;
 import baykov.daniel.springbootlibraryapp.exceptions.ResourceNotFoundException;
-import baykov.daniel.springbootlibraryapp.payload.dto.BorrowPaperBookHistoryDTO;
-import baykov.daniel.springbootlibraryapp.repositories.BorrowPaperBookHistoryRepository;
+import baykov.daniel.springbootlibraryapp.payload.dto.PaperBookHistoryDTO;
+import baykov.daniel.springbootlibraryapp.repositories.PaperBookHistoryRepository;
 import baykov.daniel.springbootlibraryapp.repositories.PaperBookRepository;
 import baykov.daniel.springbootlibraryapp.repositories.UserRepository;
-import baykov.daniel.springbootlibraryapp.services.BorrowPaperBookHistoryService;
+import baykov.daniel.springbootlibraryapp.services.PaperBookHistoryService;
 import baykov.daniel.springbootlibraryapp.services.PaperBookService;
 import baykov.daniel.springbootlibraryapp.utils.AppConstants;
 import org.modelmapper.ModelMapper;
@@ -22,16 +22,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
-public class BorrowPaperBookHistoryServiceImpl implements BorrowPaperBookHistoryService {
+public class PaperBookHistoryServiceImpl implements PaperBookHistoryService {
 
-    private final BorrowPaperBookHistoryRepository borrowPaperBookHistoryRepository;
+    private final PaperBookHistoryRepository paperBookHistoryRepository;
     private final UserRepository userRepository;
     private final PaperBookRepository paperBookRepository;
     private final PaperBookService paperBookService;
     private final ModelMapper mapper;
 
-    public BorrowPaperBookHistoryServiceImpl(BorrowPaperBookHistoryRepository borrowPaperBookHistoryRepository, UserRepository userRepository, PaperBookRepository paperBookRepository, PaperBookService paperBookService, ModelMapper mapper) {
-        this.borrowPaperBookHistoryRepository = borrowPaperBookHistoryRepository;
+    public PaperBookHistoryServiceImpl(PaperBookHistoryRepository paperBookHistoryRepository, UserRepository userRepository, PaperBookRepository paperBookRepository, PaperBookService paperBookService, ModelMapper mapper) {
+        this.paperBookHistoryRepository = paperBookHistoryRepository;
         this.userRepository = userRepository;
         this.paperBookRepository = paperBookRepository;
         this.paperBookService = paperBookService;
@@ -39,11 +39,11 @@ public class BorrowPaperBookHistoryServiceImpl implements BorrowPaperBookHistory
     }
 
     @Override
-    public BorrowPaperBookHistoryDTO borrowPaperBookById(Long bookId) {
+    public PaperBookHistoryDTO borrowPaperBookById(Long bookId) {
         User loggedUser = getLoggedUser();
 
-        List<BorrowPaperBookHistory> borrowPaperBookHistoryList = borrowPaperBookHistoryRepository.findByUser(loggedUser);
-        borrowPaperBookHistoryList.stream()
+        List<PaperBookHistory> paperBookHistoryList = paperBookHistoryRepository.findByUser(loggedUser);
+        paperBookHistoryList.stream()
                 .filter(record -> record.getReturnDateTime().isBefore(LocalDateTime.now()) && !record.isReturned())
                 .findAny()
                 .ifPresent(record -> {
@@ -57,46 +57,46 @@ public class BorrowPaperBookHistoryServiceImpl implements BorrowPaperBookHistory
             throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.NO_BOOKS_AVAILABLE_MESSAGE);
         }
 
-        BorrowPaperBookHistory borrowPaperBookHistory = new BorrowPaperBookHistory();
-        borrowPaperBookHistory.setPaperBook(paperBook);
-        borrowPaperBookHistory.setUser(loggedUser);
-        borrowPaperBookHistory.setBorrowDateTime(LocalDateTime.now());
-        borrowPaperBookHistory.setReturnDateTime(LocalDateTime.now().plusDays(AppConstants.DEFAULT_DAYS_TO_RETURN_A_BOOK));
-        borrowPaperBookHistory.setReturned(false);
+        PaperBookHistory paperBookHistory = new PaperBookHistory();
+        paperBookHistory.setPaperBook(paperBook);
+        paperBookHistory.setUser(loggedUser);
+        paperBookHistory.setBorrowDateTime(LocalDateTime.now());
+        paperBookHistory.setReturnDateTime(LocalDateTime.now().plusDays(AppConstants.DEFAULT_DAYS_TO_RETURN_A_BOOK));
+        paperBookHistory.setReturned(false);
 
         paperBookService.updateNumberOfBooksAfterBorrowing(bookId);
-        return mapToDTO(borrowPaperBookHistoryRepository.save(borrowPaperBookHistory));
+        return mapToDTO(paperBookHistoryRepository.save(paperBookHistory));
     }
 
     @Override
-    public BorrowPaperBookHistoryDTO returnPaperBookByHistoryId(Long borrowPaperBookHistoryId) {
-        BorrowPaperBookHistory borrowPaperBookHistory = borrowPaperBookHistoryRepository.findById(borrowPaperBookHistoryId)
+    public PaperBookHistoryDTO returnPaperBookByHistoryId(Long borrowPaperBookHistoryId) {
+        PaperBookHistory paperBookHistory = paperBookHistoryRepository.findById(borrowPaperBookHistoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Borrow History", "id", borrowPaperBookHistoryId));
 
         User loggedUser = getLoggedUser();
-        if (!Objects.equals(borrowPaperBookHistory.getUser().getId(), loggedUser.getId()))
+        if (!Objects.equals(paperBookHistory.getUser().getId(), loggedUser.getId()))
             throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.NO_VALID_BOOK_USER_MESSAGE);
 
-        if (borrowPaperBookHistory.isReturned()) {
+        if (paperBookHistory.isReturned()) {
             throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.BOOK_ALREADY_RETURNED_MESSAGE);
         }
 
-        borrowPaperBookHistory.setReturned(true);
-        paperBookService.updateNumberOfBooksAfterReturning(borrowPaperBookHistory.getPaperBook().getId());
-        return mapToDTO(borrowPaperBookHistoryRepository.save(borrowPaperBookHistory));
+        paperBookHistory.setReturned(true);
+        paperBookService.updateNumberOfBooksAfterReturning(paperBookHistory.getPaperBook().getId());
+        return mapToDTO(paperBookHistoryRepository.save(paperBookHistory));
     }
 
     @Override
-    public BorrowPaperBookHistoryDTO postponeReturnDateByHistoryId(Long borrowPaperBookHistoryId, Long days) {
-        BorrowPaperBookHistory borrowPaperBookHistory = borrowPaperBookHistoryRepository.findById(borrowPaperBookHistoryId)
+    public PaperBookHistoryDTO postponeReturnDateByHistoryId(Long borrowPaperBookHistoryId, Long days) {
+        PaperBookHistory paperBookHistory = paperBookHistoryRepository.findById(borrowPaperBookHistoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Borrow History", "id", borrowPaperBookHistoryId));
 
         User loggedUser = getLoggedUser();
-        if (!Objects.equals(borrowPaperBookHistory.getUser().getId(), loggedUser.getId())) {
+        if (!Objects.equals(paperBookHistory.getUser().getId(), loggedUser.getId())) {
             throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.NO_VALID_BOOK_USER_MESSAGE);
         }
 
-        if (borrowPaperBookHistory.isReturned()) {
+        if (paperBookHistory.isReturned()) {
             throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.BOOK_ALREADY_RETURNED_MESSAGE);
         }
 
@@ -104,14 +104,14 @@ public class BorrowPaperBookHistoryServiceImpl implements BorrowPaperBookHistory
             throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.INVALID_POSTPONE_DAYS_MESSAGE);
         }
 
-        if (ChronoUnit.DAYS.between(borrowPaperBookHistory.getBorrowDateTime(),
-                borrowPaperBookHistory.getReturnDateTime().plusDays(days)) > AppConstants.DEFAULT_MAX_POSTPONE_DAYS) {
+        if (ChronoUnit.DAYS.between(paperBookHistory.getBorrowDateTime(),
+                paperBookHistory.getReturnDateTime().plusDays(days)) > AppConstants.DEFAULT_MAX_POSTPONE_DAYS) {
             throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.LIMIT_POSTPONE_DAYS_MESSAGE);
         }
 
-        borrowPaperBookHistory.setReturnDateTime(borrowPaperBookHistory.getReturnDateTime().plusDays(days));
-        BorrowPaperBookHistory updatedBorrowPaperBookHistory = borrowPaperBookHistoryRepository.save(borrowPaperBookHistory);
-        return mapToDTO(updatedBorrowPaperBookHistory);
+        paperBookHistory.setReturnDateTime(paperBookHistory.getReturnDateTime().plusDays(days));
+        PaperBookHistory updatedPaperBookHistory = paperBookHistoryRepository.save(paperBookHistory);
+        return mapToDTO(updatedPaperBookHistory);
     }
 
     private User getLoggedUser() {
@@ -120,7 +120,7 @@ public class BorrowPaperBookHistoryServiceImpl implements BorrowPaperBookHistory
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", userDetails.getUsername()));
     }
 
-    private BorrowPaperBookHistoryDTO mapToDTO(BorrowPaperBookHistory borrowPaperBookHistory) {
-        return mapper.map(borrowPaperBookHistory, BorrowPaperBookHistoryDTO.class);
+    private PaperBookHistoryDTO mapToDTO(PaperBookHistory paperBookHistory) {
+        return mapper.map(paperBookHistory, PaperBookHistoryDTO.class);
     }
 }

@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "borrow_history")
-public class BorrowPaperBookHistory {
+@Table(name = "book_history")
+public class PaperBookHistory {
 
     private long id;
     private User user;

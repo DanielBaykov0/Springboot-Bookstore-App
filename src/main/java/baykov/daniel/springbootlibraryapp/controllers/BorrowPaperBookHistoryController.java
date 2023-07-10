@@ -1,7 +1,7 @@
 package baykov.daniel.springbootlibraryapp.controllers;
 
-import baykov.daniel.springbootlibraryapp.payload.dto.BorrowPaperBookHistoryDTO;
-import baykov.daniel.springbootlibraryapp.services.BorrowPaperBookHistoryService;
+import baykov.daniel.springbootlibraryapp.payload.dto.PaperBookHistoryDTO;
+import baykov.daniel.springbootlibraryapp.services.PaperBookHistoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,24 +10,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public class BorrowPaperBookHistoryController {
 
-    private final BorrowPaperBookHistoryService borrowPaperBookHistoryService;
+    private final PaperBookHistoryService paperBookHistoryService;
 
-    public BorrowPaperBookHistoryController(BorrowPaperBookHistoryService borrowPaperBookHistoryService) {
-        this.borrowPaperBookHistoryService = borrowPaperBookHistoryService;
+    public BorrowPaperBookHistoryController(PaperBookHistoryService paperBookHistoryService) {
+        this.paperBookHistoryService = paperBookHistoryService;
     }
 
     @PostMapping("borrow/{id}")
-    public ResponseEntity<BorrowPaperBookHistoryDTO> borrowPaperBook(@PathVariable(name = "id") Long bookId) {
-        return new ResponseEntity<>(borrowPaperBookHistoryService.borrowPaperBookById(bookId), HttpStatus.CREATED);
+    public ResponseEntity<PaperBookHistoryDTO> borrowPaperBook(@PathVariable(name = "id") Long bookId) {
+        return new ResponseEntity<>(paperBookHistoryService.borrowPaperBookById(bookId), HttpStatus.CREATED);
     }
 
     @PatchMapping("return/{id}")
-    public ResponseEntity<BorrowPaperBookHistoryDTO> returnPaperBook(@PathVariable(name = "id") Long borrowHistoryId) {
-        return ResponseEntity.ok(borrowPaperBookHistoryService.returnPaperBookByHistoryId(borrowHistoryId));
+    public ResponseEntity<PaperBookHistoryDTO> returnPaperBook(@PathVariable(name = "id") Long borrowHistoryId) {
+        return ResponseEntity.ok(paperBookHistoryService.returnPaperBookByHistoryId(borrowHistoryId));
     }
 
     @PatchMapping("postpone/{id}")
-    public ResponseEntity<BorrowPaperBookHistoryDTO> postponeBook(@PathVariable(name = "id") Long borrowHistoryId, @RequestParam("days") Long days) {
-        return ResponseEntity.ok(borrowPaperBookHistoryService.postponeReturnDateByHistoryId(borrowHistoryId, days));
+    public ResponseEntity<PaperBookHistoryDTO> postponeBook(@PathVariable(name = "id") Long borrowHistoryId, @RequestParam("days") Long days) {
+        return ResponseEntity.ok(paperBookHistoryService.postponeReturnDateByHistoryId(borrowHistoryId, days));
     }
 }
