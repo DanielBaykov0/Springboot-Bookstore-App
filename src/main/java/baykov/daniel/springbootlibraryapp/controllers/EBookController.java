@@ -4,6 +4,7 @@ import baykov.daniel.springbootlibraryapp.payload.dto.EBookDTO;
 import baykov.daniel.springbootlibraryapp.payload.response.EBookResponse;
 import baykov.daniel.springbootlibraryapp.services.EBookService;
 import baykov.daniel.springbootlibraryapp.utils.AppConstants;
+import baykov.daniel.springbootlibraryapp.utils.Messages;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,6 @@ public class EBookController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteEBookById(@PathVariable(name = "id") Long ebookId) {
         eBookService.deleteEBook(ebookId);
-        return ResponseEntity.ok(AppConstants.EBOOK_DELETE_MESSAGE);
+        return ResponseEntity.ok(Messages.EBOOK_DELETE_MESSAGE);
     }
 }

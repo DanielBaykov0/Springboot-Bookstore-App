@@ -4,6 +4,7 @@ import baykov.daniel.springbootlibraryapp.payload.dto.PaperBookDTO;
 import baykov.daniel.springbootlibraryapp.payload.response.PaperBookResponse;
 import baykov.daniel.springbootlibraryapp.services.PaperBookService;
 import baykov.daniel.springbootlibraryapp.utils.AppConstants;
+import baykov.daniel.springbootlibraryapp.utils.Messages;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,6 @@ public class PaperBookController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deletePaperBookById(@PathVariable(name = "id") Long paperBookId) {
         paperBookService.deletePaperBook(paperBookId);
-        return ResponseEntity.ok(AppConstants.PAPER_BOOK_DELETE_MESSAGE);
+        return ResponseEntity.ok(Messages.PAPER_BOOK_DELETE_MESSAGE);
     }
 }

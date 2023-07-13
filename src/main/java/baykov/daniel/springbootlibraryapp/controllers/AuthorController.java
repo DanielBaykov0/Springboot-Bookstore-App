@@ -4,6 +4,7 @@ import baykov.daniel.springbootlibraryapp.payload.dto.AuthorDTO;
 import baykov.daniel.springbootlibraryapp.payload.response.AuthorResponse;
 import baykov.daniel.springbootlibraryapp.services.AuthorService;
 import baykov.daniel.springbootlibraryapp.utils.AppConstants;
+import baykov.daniel.springbootlibraryapp.utils.Messages;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,6 @@ public class AuthorController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteAuthorById(@PathVariable(name = "id") Long authorId) {
         authorService.deleteAuthorById(authorId);
-        return ResponseEntity.ok(AppConstants.AUTHOR_DELETE_MESSAGE);
+        return ResponseEntity.ok(Messages.AUTHOR_DELETE_MESSAGE);
     }
 }

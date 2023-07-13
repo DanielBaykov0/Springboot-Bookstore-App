@@ -11,7 +11,7 @@ import baykov.daniel.springbootlibraryapp.repositories.EBookHistoryRepository;
 import baykov.daniel.springbootlibraryapp.repositories.EBookRepository;
 import baykov.daniel.springbootlibraryapp.repositories.UserRepository;
 import baykov.daniel.springbootlibraryapp.services.EBookHistoryService;
-import baykov.daniel.springbootlibraryapp.utils.AppConstants;
+import baykov.daniel.springbootlibraryapp.utils.Messages;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -76,7 +76,7 @@ public class EBookHistoryServiceImpl implements EBookHistoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Ebook", "id", ebookId));
         EBookHistory eBookHistory = eBookHistoryRepository
                 .findEBookByUserIdAndEBookId(user.getId(), eBook.getId())
-                .orElseThrow(() -> new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.INVALID_USER_AND_EBOOK_MESSAGE));
+                .orElseThrow(() -> new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.INVALID_USER_AND_EBOOK_MESSAGE));
         return mapToDTO(eBookHistory);
     }
 

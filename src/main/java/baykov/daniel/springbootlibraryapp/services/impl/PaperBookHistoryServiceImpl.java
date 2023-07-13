@@ -12,6 +12,7 @@ import baykov.daniel.springbootlibraryapp.repositories.UserRepository;
 import baykov.daniel.springbootlibraryapp.services.PaperBookHistoryService;
 import baykov.daniel.springbootlibraryapp.services.PaperBookService;
 import baykov.daniel.springbootlibraryapp.utils.AppConstants;
+import baykov.daniel.springbootlibraryapp.utils.Messages;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -48,14 +49,14 @@ public class PaperBookHistoryServiceImpl implements PaperBookHistoryService {
                 .filter(record -> record.getReturnDateTime().isBefore(LocalDateTime.now()) && !record.isReturned())
                 .findAny()
                 .ifPresent(record -> {
-                    throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.PENDING_RETURN_MESSAGE);
+                    throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.PENDING_RETURN_MESSAGE);
                 });
 
         PaperBook paperBook = paperBookRepository.findById(bookId)
                 .orElseThrow(() -> new ResourceNotFoundException("Book", "id", bookId));
 
         if (paperBook.getNumberOfCopiesAvailable() < 1) {
-            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.NO_BOOKS_AVAILABLE_MESSAGE);
+            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.NO_BOOKS_AVAILABLE_MESSAGE);
         }
 
         PaperBookHistory paperBookHistory = new PaperBookHistory();
@@ -77,10 +78,10 @@ public class PaperBookHistoryServiceImpl implements PaperBookHistoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Borrow History", "id", borrowPaperBookHistoryId));
 
         if (!Objects.equals(paperBookHistory.getUser().getId(), user.getId()))
-            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.NO_VALID_BOOK_USER_MESSAGE);
+            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.NO_VALID_BOOK_USER_MESSAGE);
 
         if (paperBookHistory.isReturned()) {
-            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.BOOK_ALREADY_RETURNED_MESSAGE);
+            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.BOOK_ALREADY_RETURNED_MESSAGE);
         }
 
         paperBookHistory.setReturned(true);
@@ -96,20 +97,20 @@ public class PaperBookHistoryServiceImpl implements PaperBookHistoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Borrow History", "id", borrowPaperBookHistoryId));
 
         if (!Objects.equals(paperBookHistory.getUser().getId(), user.getId())) {
-            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.NO_VALID_BOOK_USER_MESSAGE);
+            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.NO_VALID_BOOK_USER_MESSAGE);
         }
 
         if (paperBookHistory.isReturned()) {
-            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.BOOK_ALREADY_RETURNED_MESSAGE);
+            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.BOOK_ALREADY_RETURNED_MESSAGE);
         }
 
         if (days < 1) {
-            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.INVALID_POSTPONE_DAYS_MESSAGE);
+            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.INVALID_POSTPONE_DAYS_MESSAGE);
         }
 
         if (ChronoUnit.DAYS.between(paperBookHistory.getBorrowDateTime(),
                 paperBookHistory.getReturnDateTime().plusDays(days)) > AppConstants.DEFAULT_MAX_POSTPONE_DAYS) {
-            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, AppConstants.LIMIT_POSTPONE_DAYS_MESSAGE);
+            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.LIMIT_POSTPONE_DAYS_MESSAGE);
         }
 
         paperBookHistory.setReturnDateTime(paperBookHistory.getReturnDateTime().plusDays(days));
