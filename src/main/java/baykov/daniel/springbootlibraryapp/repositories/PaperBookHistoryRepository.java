@@ -1,6 +1,5 @@
 package baykov.daniel.springbootlibraryapp.repositories;
 
-import baykov.daniel.springbootlibraryapp.entities.PaperBookHistory;
 import baykov.daniel.springbootlibraryapp.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

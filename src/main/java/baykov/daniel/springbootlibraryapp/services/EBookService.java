@@ -1,8 +1,5 @@
 package baykov.daniel.springbootlibraryapp.services;
 
-import baykov.daniel.springbootlibraryapp.payload.dto.EBookDTO;
-import baykov.daniel.springbootlibraryapp.payload.response.EBookResponse;
-
 public interface EBookService {
 
     EBookDTO createEBook(EBookDTO eBookDTO);

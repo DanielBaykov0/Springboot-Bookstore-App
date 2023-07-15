@@ -1,9 +1,6 @@
 package baykov.daniel.springbootlibraryapp.services.impl;
 
-import baykov.daniel.springbootlibraryapp.entities.EBook;
 import baykov.daniel.springbootlibraryapp.exceptions.ResourceNotFoundException;
-import baykov.daniel.springbootlibraryapp.payload.dto.EBookDTO;
-import baykov.daniel.springbootlibraryapp.payload.response.EBookResponse;
 import baykov.daniel.springbootlibraryapp.repositories.EBookRepository;
 import baykov.daniel.springbootlibraryapp.services.EBookService;
 import org.modelmapper.ModelMapper;

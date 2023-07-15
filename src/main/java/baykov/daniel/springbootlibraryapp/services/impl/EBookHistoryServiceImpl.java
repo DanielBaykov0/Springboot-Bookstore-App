@@ -1,12 +1,9 @@
 package baykov.daniel.springbootlibraryapp.services.impl;
 
-import baykov.daniel.springbootlibraryapp.entities.EBook;
-import baykov.daniel.springbootlibraryapp.entities.EBookHistory;
+import baykov.daniel.springbootlibraryapp.entities.UserBookHistory;
 import baykov.daniel.springbootlibraryapp.entities.User;
 import baykov.daniel.springbootlibraryapp.exceptions.LibraryHTTPException;
 import baykov.daniel.springbootlibraryapp.exceptions.ResourceNotFoundException;
-import baykov.daniel.springbootlibraryapp.payload.dto.EBookHistoryDTO;
-import baykov.daniel.springbootlibraryapp.payload.response.EBookHistoryResponse;
 import baykov.daniel.springbootlibraryapp.repositories.EBookHistoryRepository;
 import baykov.daniel.springbootlibraryapp.repositories.EBookRepository;
 import baykov.daniel.springbootlibraryapp.repositories.UserRepository;
@@ -45,12 +42,12 @@ public class EBookHistoryServiceImpl implements EBookHistoryService {
         EBook eBook = eBookRepository.findById(ebookId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ebook", "id", ebookId));
 
-        EBookHistory eBookHistory = new EBookHistory();
-        eBookHistory.setUser(user);
-        eBookHistory.setEBook(eBook);
-        eBookHistory.setRead(true);
-        eBookHistory.setDownloaded(false);
-        return mapToDTO(eBookHistoryRepository.save(eBookHistory));
+        UserBookHistory userBookHistory = new UserBookHistory();
+        userBookHistory.setUser(user);
+        userBookHistory.setEBook(eBook);
+        userBookHistory.setRead(true);
+        userBookHistory.setDownloaded(false);
+        return mapToDTO(eBookHistoryRepository.save(userBookHistory));
     }
 
     @Override
@@ -60,12 +57,12 @@ public class EBookHistoryServiceImpl implements EBookHistoryService {
         EBook eBook = eBookRepository.findById(ebookId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ebook", "id", ebookId));
 
-        EBookHistory eBookHistory = new EBookHistory();
-        eBookHistory.setUser(user);
-        eBookHistory.setEBook(eBook);
-        eBookHistory.setRead(false);
-        eBookHistory.setDownloaded(true);
-        return mapToDTO(eBookHistoryRepository.save(eBookHistory));
+        UserBookHistory userBookHistory = new UserBookHistory();
+        userBookHistory.setUser(user);
+        userBookHistory.setEBook(eBook);
+        userBookHistory.setRead(false);
+        userBookHistory.setDownloaded(true);
+        return mapToDTO(eBookHistoryRepository.save(userBookHistory));
     }
 
     @Override
@@ -74,10 +71,10 @@ public class EBookHistoryServiceImpl implements EBookHistoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
         EBook eBook = eBookRepository.findById(ebookId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ebook", "id", ebookId));
-        EBookHistory eBookHistory = eBookHistoryRepository
+        UserBookHistory userBookHistory = eBookHistoryRepository
                 .findEBookByUserIdAndEBookId(user.getId(), eBook.getId())
                 .orElseThrow(() -> new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.INVALID_USER_AND_EBOOK_MESSAGE));
-        return mapToDTO(eBookHistory);
+        return mapToDTO(userBookHistory);
     }
 
     @Override
@@ -88,13 +85,13 @@ public class EBookHistoryServiceImpl implements EBookHistoryService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
-        Page<EBookHistory> eBookHistories = eBookHistoryRepository.findAllEBooksByUserId(user.getId(), pageable);
+        Page<UserBookHistory> eBookHistories = eBookHistoryRepository.findAllEBooksByUserId(user.getId(), pageable);
         return getEBookHistoryResponse(eBookHistories);
     }
 
-    private EBookHistoryResponse getEBookHistoryResponse(Page<EBookHistory> eBookHistories) {
-        List<EBookHistory> eBookHistory = eBookHistories.getContent();
-        List<EBookHistoryDTO>  content = eBookHistory.stream().map(this::mapToDTO).collect(Collectors.toList());
+    private EBookHistoryResponse getEBookHistoryResponse(Page<UserBookHistory> eBookHistories) {
+        List<UserBookHistory> userBookHistory = eBookHistories.getContent();
+        List<EBookHistoryDTO>  content = userBookHistory.stream().map(this::mapToDTO).collect(Collectors.toList());
         EBookHistoryResponse eBookHistoryResponse = new EBookHistoryResponse();
         eBookHistoryResponse.setContent(content);
         eBookHistoryResponse.setPageNo(eBookHistories.getNumber());
@@ -105,7 +102,7 @@ public class EBookHistoryServiceImpl implements EBookHistoryService {
         return eBookHistoryResponse;
     }
 
-    private EBookHistoryDTO mapToDTO(EBookHistory eBookHistory) {
-        return mapper.map(eBookHistory, EBookHistoryDTO.class);
+    private EBookHistoryDTO mapToDTO(UserBookHistory userBookHistory) {
+        return mapper.map(userBookHistory, EBookHistoryDTO.class);
     }
 }

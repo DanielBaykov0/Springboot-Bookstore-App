@@ -1,12 +1,12 @@
 package baykov.daniel.springbootlibraryapp.services;
 
-import baykov.daniel.springbootlibraryapp.payload.dto.PaperBookHistoryDTO;
+import baykov.daniel.springbootlibraryapp.payload.dto.UserBookHistoryDTO;
 
 public interface PaperBookHistoryService {
 
-    PaperBookHistoryDTO borrowPaperBookById(Long userId, Long bookId);
+    UserBookHistoryDTO borrowPaperBookById(Long userId, Long bookId);
 
-    PaperBookHistoryDTO returnPaperBookByHistoryId(Long userId, Long borrowPaperBookHistoryId);
+    UserBookHistoryDTO returnPaperBookByHistoryId(Long userId, Long borrowPaperBookHistoryId);
 
-    PaperBookHistoryDTO postponeReturnDateByHistoryId(Long userId, Long borrowPaperBookHistoryId, Long days);
+    UserBookHistoryDTO postponeReturnDateByHistoryId(Long userId, Long borrowPaperBookHistoryId, Long days);
 }

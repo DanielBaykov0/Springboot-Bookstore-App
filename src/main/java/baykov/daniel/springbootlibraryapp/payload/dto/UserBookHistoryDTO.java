@@ -1,7 +1,5 @@
-package baykov.daniel.springbootlibraryapp.entities;
+package baykov.daniel.springbootlibraryapp.payload.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,14 +11,14 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "book_history")
-public class PaperBookHistory {
+public class UserBookHistoryDTO {
 
     private long id;
-    private User user;
-    private PaperBook paperBook;
+    private Long userId;
+    private Long bookId;
     private LocalDateTime borrowDateTime;
     private LocalDateTime returnDateTime;
-    private boolean isReturned;
+    private Boolean isReturned;
+    private Boolean isRead;
+    private Boolean isDownloaded;
 }

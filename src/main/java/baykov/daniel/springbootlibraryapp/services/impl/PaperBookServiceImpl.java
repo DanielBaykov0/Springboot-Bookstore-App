@@ -1,9 +1,9 @@
 package baykov.daniel.springbootlibraryapp.services.impl;
 
-import baykov.daniel.springbootlibraryapp.entities.PaperBook;
+import baykov.daniel.springbootlibraryapp.entities.Book;
 import baykov.daniel.springbootlibraryapp.exceptions.ResourceNotFoundException;
-import baykov.daniel.springbootlibraryapp.payload.dto.PaperBookDTO;
-import baykov.daniel.springbootlibraryapp.payload.response.PaperBookResponse;
+import baykov.daniel.springbootlibraryapp.payload.dto.BookDTO;
+import baykov.daniel.springbootlibraryapp.payload.response.BookResponse;
 import baykov.daniel.springbootlibraryapp.repositories.PaperBookRepository;
 import baykov.daniel.springbootlibraryapp.services.PaperBookService;
 import org.modelmapper.ModelMapper;
@@ -28,79 +28,79 @@ public class PaperBookServiceImpl implements PaperBookService {
     }
 
     @Override
-    public PaperBookDTO createPaperBook(PaperBookDTO paperBookDTO) {
-        PaperBook paperBook = mapToEntity(paperBookDTO);
-        PaperBook newPaperBook = paperBookRepository.save(paperBook);
-        return mapToDTO(newPaperBook);
+    public BookDTO createPaperBook(BookDTO bookDTO) {
+        Book book = mapToEntity(bookDTO);
+        Book newBook = paperBookRepository.save(book);
+        return mapToDTO(newBook);
     }
 
     @Override
-    public PaperBookDTO getPaperBookById(long id) {
-        PaperBook paperBook = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
-        return mapToDTO(paperBook);
+    public BookDTO getPaperBookById(long id) {
+        Book book = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+        return mapToDTO(book);
     }
 
     @Override
-    public PaperBookResponse getAllPaperBooks(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public BookResponse getAllPaperBooks(int pageNo, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<PaperBook> allPaperBooks = paperBookRepository.findAll(pageable);
+        Page<Book> allPaperBooks = paperBookRepository.findAll(pageable);
 
-        List<PaperBook> paperBookList = allPaperBooks.getContent();
+        List<Book> bookList = allPaperBooks.getContent();
 
-        List<PaperBookDTO> paperBooks = paperBookList.stream().map(this::mapToDTO).collect(Collectors.toList());
-        PaperBookResponse paperBookResponse = new PaperBookResponse();
-        paperBookResponse.setContent(paperBooks);
-        paperBookResponse.setPageNo(allPaperBooks.getNumber());
-        paperBookResponse.setPageSize(allPaperBooks.getSize());
-        paperBookResponse.setTotalElements(allPaperBooks.getTotalElements());
-        paperBookResponse.setTotalPages(allPaperBooks.getTotalPages());
-        paperBookResponse.setLast(allPaperBooks.isLast());
-        return paperBookResponse;
+        List<BookDTO> paperBooks = bookList.stream().map(this::mapToDTO).collect(Collectors.toList());
+        BookResponse bookResponse = new BookResponse();
+        bookResponse.setContent(paperBooks);
+        bookResponse.setPageNo(allPaperBooks.getNumber());
+        bookResponse.setPageSize(allPaperBooks.getSize());
+        bookResponse.setTotalElements(allPaperBooks.getTotalElements());
+        bookResponse.setTotalPages(allPaperBooks.getTotalPages());
+        bookResponse.setLast(allPaperBooks.isLast());
+        return bookResponse;
     }
 
     @Override
-    public PaperBookDTO updatePaperBook(PaperBookDTO paperBookDTO, long id) {
-        PaperBook paperBook = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
-        paperBook.setTitle(paperBookDTO.getTitle());
-        paperBook.setAuthor(paperBookDTO.getAuthor());
-        paperBook.setGenre(paperBookDTO.getGenre());
-        paperBook.setDescription(paperBookDTO.getDescription());
-        paperBook.setBorrowedDate(paperBookDTO.getBorrowedDate());
-        paperBook.setNumberOfCopiesTotal(paperBookDTO.getNumberOfCopiesTotal());
-        paperBook.setNumberOfCopiesAvailable(paperBookDTO.getNumberOfCopiesAvailable());
-        paperBook.setISBN(paperBookDTO.getISBN());
-        paperBook.setBookType("PAPER");
+    public BookDTO updatePaperBook(BookDTO bookDTO, long id) {
+        Book book = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setGenre(bookDTO.getGenre());
+        book.setDescription(bookDTO.getDescription());
+        book.setBorrowedDate(bookDTO.getBorrowedDate());
+        book.setNumberOfCopiesTotal(bookDTO.getNumberOfCopiesTotal());
+        book.setNumberOfCopiesAvailable(bookDTO.getNumberOfCopiesAvailable());
+        book.setISBN(bookDTO.getISBN());
+        book.setBookType("PAPER");
 
-        PaperBook newPaperBook = paperBookRepository.save(paperBook);
-        return mapToDTO(newPaperBook);
+        Book newBook = paperBookRepository.save(book);
+        return mapToDTO(newBook);
     }
 
     @Override
     public void deletePaperBook(long id) {
-        PaperBook paperBook = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
-        paperBookRepository.delete(paperBook);
+        Book book = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+        paperBookRepository.delete(book);
     }
 
     @Override
     public void updateNumberOfBooksAfterBorrowing(Long id) {
-        PaperBook paperBook = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
-        paperBook.setNumberOfCopiesAvailable(paperBook.getNumberOfCopiesAvailable() - 1);
+        Book book = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+        book.setNumberOfCopiesAvailable(book.getNumberOfCopiesAvailable() - 1);
     }
 
     @Override
     public void updateNumberOfBooksAfterReturning(Long id) {
-        PaperBook paperBook = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
-        paperBook.setNumberOfCopiesAvailable(paperBook.getNumberOfCopiesAvailable() + 1);
+        Book book = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+        book.setNumberOfCopiesAvailable(book.getNumberOfCopiesAvailable() + 1);
     }
 
-    private PaperBook mapToEntity(PaperBookDTO paperBookDTO) {
-        return mapper.map(paperBookDTO, PaperBook.class);
+    private Book mapToEntity(BookDTO bookDTO) {
+        return mapper.map(bookDTO, Book.class);
     }
 
-    private PaperBookDTO mapToDTO(PaperBook paperBook) {
-        return mapper.map(paperBook, PaperBookDTO.class);
+    private BookDTO mapToDTO(Book book) {
+        return mapper.map(book, BookDTO.class);
     }
 }

@@ -1,11 +1,10 @@
 package baykov.daniel.springbootlibraryapp.services.impl;
 
-import baykov.daniel.springbootlibraryapp.entities.PaperBook;
-import baykov.daniel.springbootlibraryapp.entities.PaperBookHistory;
+import baykov.daniel.springbootlibraryapp.entities.Book;
 import baykov.daniel.springbootlibraryapp.entities.User;
 import baykov.daniel.springbootlibraryapp.exceptions.LibraryHTTPException;
 import baykov.daniel.springbootlibraryapp.exceptions.ResourceNotFoundException;
-import baykov.daniel.springbootlibraryapp.payload.dto.PaperBookHistoryDTO;
+import baykov.daniel.springbootlibraryapp.payload.dto.UserBookHistoryDTO;
 import baykov.daniel.springbootlibraryapp.repositories.PaperBookHistoryRepository;
 import baykov.daniel.springbootlibraryapp.repositories.PaperBookRepository;
 import baykov.daniel.springbootlibraryapp.repositories.UserRepository;
@@ -40,7 +39,7 @@ public class PaperBookHistoryServiceImpl implements PaperBookHistoryService {
     }
 
     @Override
-    public PaperBookHistoryDTO borrowPaperBookById(Long userId, Long bookId) {
+    public UserBookHistoryDTO borrowPaperBookById(Long userId, Long bookId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
@@ -52,15 +51,15 @@ public class PaperBookHistoryServiceImpl implements PaperBookHistoryService {
                     throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.PENDING_RETURN_MESSAGE);
                 });
 
-        PaperBook paperBook = paperBookRepository.findById(bookId)
+        Book book = paperBookRepository.findById(bookId)
                 .orElseThrow(() -> new ResourceNotFoundException("Book", "id", bookId));
 
-        if (paperBook.getNumberOfCopiesAvailable() < 1) {
+        if (book.getNumberOfCopiesAvailable() < 1) {
             throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.NO_BOOKS_AVAILABLE_MESSAGE);
         }
 
         PaperBookHistory paperBookHistory = new PaperBookHistory();
-        paperBookHistory.setPaperBook(paperBook);
+        paperBookHistory.setBook(book);
         paperBookHistory.setUser(user);
         paperBookHistory.setBorrowDateTime(LocalDateTime.now());
         paperBookHistory.setReturnDateTime(LocalDateTime.now().plusDays(AppConstants.DEFAULT_DAYS_TO_RETURN_A_BOOK));
@@ -71,7 +70,7 @@ public class PaperBookHistoryServiceImpl implements PaperBookHistoryService {
     }
 
     @Override
-    public PaperBookHistoryDTO returnPaperBookByHistoryId(Long userId, Long borrowPaperBookHistoryId) {
+    public UserBookHistoryDTO returnPaperBookByHistoryId(Long userId, Long borrowPaperBookHistoryId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
         PaperBookHistory paperBookHistory = paperBookHistoryRepository.findById(borrowPaperBookHistoryId)
@@ -85,12 +84,12 @@ public class PaperBookHistoryServiceImpl implements PaperBookHistoryService {
         }
 
         paperBookHistory.setReturned(true);
-        paperBookService.updateNumberOfBooksAfterReturning(paperBookHistory.getPaperBook().getId());
+        paperBookService.updateNumberOfBooksAfterReturning(paperBookHistory.getBook().getId());
         return mapToDTO(paperBookHistoryRepository.save(paperBookHistory));
     }
 
     @Override
-    public PaperBookHistoryDTO postponeReturnDateByHistoryId(Long userId, Long borrowPaperBookHistoryId, Long days) {
+    public UserBookHistoryDTO postponeReturnDateByHistoryId(Long userId, Long borrowPaperBookHistoryId, Long days) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
         PaperBookHistory paperBookHistory = paperBookHistoryRepository.findById(borrowPaperBookHistoryId)
@@ -118,7 +117,7 @@ public class PaperBookHistoryServiceImpl implements PaperBookHistoryService {
         return mapToDTO(updatedPaperBookHistory);
     }
 
-    private PaperBookHistoryDTO mapToDTO(PaperBookHistory paperBookHistory) {
-        return mapper.map(paperBookHistory, PaperBookHistoryDTO.class);
+    private UserBookHistoryDTO mapToDTO(PaperBookHistory paperBookHistory) {
+        return mapper.map(paperBookHistory, UserBookHistoryDTO.class);
     }
 }

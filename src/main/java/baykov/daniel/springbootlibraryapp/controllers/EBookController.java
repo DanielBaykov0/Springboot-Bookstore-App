@@ -1,7 +1,5 @@
 package baykov.daniel.springbootlibraryapp.controllers;
 
-import baykov.daniel.springbootlibraryapp.payload.dto.EBookDTO;
-import baykov.daniel.springbootlibraryapp.payload.response.EBookResponse;
 import baykov.daniel.springbootlibraryapp.services.EBookService;
 import baykov.daniel.springbootlibraryapp.utils.AppConstants;
 import baykov.daniel.springbootlibraryapp.utils.Messages;

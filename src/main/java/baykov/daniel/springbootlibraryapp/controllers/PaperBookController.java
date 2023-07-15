@@ -1,7 +1,7 @@
 package baykov.daniel.springbootlibraryapp.controllers;
 
-import baykov.daniel.springbootlibraryapp.payload.dto.PaperBookDTO;
-import baykov.daniel.springbootlibraryapp.payload.response.PaperBookResponse;
+import baykov.daniel.springbootlibraryapp.payload.dto.BookDTO;
+import baykov.daniel.springbootlibraryapp.payload.response.BookResponse;
 import baykov.daniel.springbootlibraryapp.services.PaperBookService;
 import baykov.daniel.springbootlibraryapp.utils.AppConstants;
 import baykov.daniel.springbootlibraryapp.utils.Messages;
@@ -21,17 +21,17 @@ public class PaperBookController {
     }
 
     @PostMapping
-    public ResponseEntity<PaperBookDTO> createPaperBook(@Valid @RequestBody PaperBookDTO paperBookDTO) {
-        return new ResponseEntity<>(paperBookService.createPaperBook(paperBookDTO), HttpStatus.CREATED);
+    public ResponseEntity<BookDTO> createPaperBook(@Valid @RequestBody BookDTO bookDTO) {
+        return new ResponseEntity<>(paperBookService.createPaperBook(bookDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<PaperBookDTO> getPaperBookById(@PathVariable(name = "id") Long paperBookId) {
+    public ResponseEntity<BookDTO> getPaperBookById(@PathVariable(name = "id") Long paperBookId) {
         return ResponseEntity.ok(paperBookService.getPaperBookById(paperBookId));
     }
 
     @GetMapping
-    public ResponseEntity<PaperBookResponse> getAllPaperBooks(
+    public ResponseEntity<BookResponse> getAllPaperBooks(
             @RequestParam(name = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(name = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(name = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
@@ -40,9 +40,9 @@ public class PaperBookController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<PaperBookDTO> updatePaperBookById(@PathVariable(name = "id") Long paperBookId,
-                                                            @Valid @RequestBody PaperBookDTO paperBookDTO) {
-        return ResponseEntity.ok(paperBookService.updatePaperBook(paperBookDTO, paperBookId));
+    public ResponseEntity<BookDTO> updatePaperBookById(@PathVariable(name = "id") Long paperBookId,
+                                                       @Valid @RequestBody BookDTO bookDTO) {
+        return ResponseEntity.ok(paperBookService.updatePaperBook(bookDTO, paperBookId));
     }
 
     @DeleteMapping("{id}")

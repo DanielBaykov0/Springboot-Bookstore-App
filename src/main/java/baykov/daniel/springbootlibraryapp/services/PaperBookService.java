@@ -1,17 +1,17 @@
 package baykov.daniel.springbootlibraryapp.services;
 
-import baykov.daniel.springbootlibraryapp.payload.dto.PaperBookDTO;
-import baykov.daniel.springbootlibraryapp.payload.response.PaperBookResponse;
+import baykov.daniel.springbootlibraryapp.payload.dto.BookDTO;
+import baykov.daniel.springbootlibraryapp.payload.response.BookResponse;
 
 public interface PaperBookService {
 
-    PaperBookDTO createPaperBook(PaperBookDTO paperBookDTO);
+    BookDTO createPaperBook(BookDTO bookDTO);
 
-    PaperBookDTO getPaperBookById(long id);
+    BookDTO getPaperBookById(long id);
 
-    PaperBookResponse getAllPaperBooks(int pageNo, int pageSize, String sortBy, String sortDir);
+    BookResponse getAllPaperBooks(int pageNo, int pageSize, String sortBy, String sortDir);
 
-    PaperBookDTO updatePaperBook(PaperBookDTO paperBookDTO, long id);
+    BookDTO updatePaperBook(BookDTO bookDTO, long id);
 
     void deletePaperBook(long id);
 

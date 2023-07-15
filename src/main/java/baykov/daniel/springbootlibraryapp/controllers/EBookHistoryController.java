@@ -1,7 +1,5 @@
 package baykov.daniel.springbootlibraryapp.controllers;
 
-import baykov.daniel.springbootlibraryapp.payload.dto.EBookHistoryDTO;
-import baykov.daniel.springbootlibraryapp.payload.response.EBookHistoryResponse;
 import baykov.daniel.springbootlibraryapp.services.EBookHistoryService;
 import baykov.daniel.springbootlibraryapp.utils.AppConstants;
 import org.springframework.http.HttpStatus;

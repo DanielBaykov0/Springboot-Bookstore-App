@@ -10,30 +10,30 @@ import lombok.Setter;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ebooks")
-public class EBook {
+@Table(name = "book")
+public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "default 'EBOOK'")
-    private String bookType;
-
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
     @Column(nullable = false)
     private String genre;
+
+    @Column(nullable = false)
+    private int publicationYear;
     private String description;
 
     @Column(unique = true, nullable = false)
@@ -47,6 +47,12 @@ public class EBook {
         }
     }
 
+    private int numberOfCopiesAvailable;
+    private int numberOfCopiesTotal;
+
+    @Column(unique = true)
     private String readingLink;
+
+    @Column(unique = true)
     private String downloadLink;
 }
