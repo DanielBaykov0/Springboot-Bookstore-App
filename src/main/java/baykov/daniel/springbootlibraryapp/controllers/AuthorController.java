@@ -50,4 +50,17 @@ public class AuthorController {
         authorService.deleteAuthorById(authorId);
         return ResponseEntity.ok(Messages.AUTHOR_DELETE_MESSAGE);
     }
+
+    @GetMapping("search")
+    public ResponseEntity<AuthorResponse> getAllAuthorsByAuthorFirstNameOrAuthorLastNameOrAuthorCountry(
+            @RequestParam(value = "firstName", required = false) String firstName,
+            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "country", required = false) String country,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
+        return ResponseEntity.ok(authorService
+                .getAllAuthorsByAuthorFirstNameOrAuthorLastNameOrAuthorCountry(firstName, lastName, country, pageNo, pageSize, sortBy, sortDir));
+    }
 }

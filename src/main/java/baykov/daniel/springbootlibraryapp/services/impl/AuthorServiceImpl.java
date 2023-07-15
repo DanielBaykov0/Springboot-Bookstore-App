@@ -50,7 +50,8 @@ public class AuthorServiceImpl implements AuthorService {
 
         List<Author> authorList = allAuthors.getContent();
 
-        List<AuthorDTO> authors = authorList.stream().map(this::mapToDTO).collect(Collectors.toList());;
+        List<AuthorDTO> authors = authorList.stream().map(this::mapToDTO).collect(Collectors.toList());
+        ;
         AuthorResponse authorResponse = new AuthorResponse();
         authorResponse.setContent(authors);
         authorResponse.setPageNo(allAuthors.getNumber());
@@ -64,12 +65,12 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public AuthorDTO updateAuthorById(AuthorDTO authorDTO, long id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Author", "id", id));
-        author.setFirstName(authorDTO.getAuthorFirstName());
-        author.setLastName(authorDTO.getAuthorLastName());
-        author.setCountryBorn(authorDTO.getAuthorCountryBorn());
-        author.setBirthDate(authorDTO.getAuthorBirthDate());
-        author.setDeathDate(authorDTO.getAuthorDeathDate());
-        author.setAlive(authorDTO.isAuthorAlive());
+        author.setFirstName(authorDTO.getFirstName());
+        author.setLastName(authorDTO.getLastName());
+        author.setCountryBorn(authorDTO.getCountryBorn());
+        author.setBirthDate(authorDTO.getBirthDate());
+        author.setDeathDate(authorDTO.getDeathDate());
+        author.setAlive(authorDTO.isAlive());
 
         Author newAuthor = authorRepository.save(author);
         return mapToDTO(newAuthor);
@@ -79,6 +80,30 @@ public class AuthorServiceImpl implements AuthorService {
     public void deleteAuthorById(long id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Author", "id", id));
         authorRepository.delete(author);
+    }
+
+    @Override
+    public AuthorResponse getAllAuthorsByAuthorFirstNameOrAuthorLastNameOrAuthorCountry(String firstName, String lastName, String country, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Author> content = authorRepository.findAllByAuthorFirstNameIgnoreCaseOrAuthorLastNameIgnoreCaseOrAuthorCountryIgnoreCase(
+                firstName, lastName, country, pageable);
+        return getAuthorResponse(content);
+    }
+
+    private AuthorResponse getAuthorResponse(Page<Author> authors) {
+        List<Author> authorList = authors.getContent();
+        List<AuthorDTO> content = authorList.stream().map(this::mapToDTO).collect(Collectors.toList());
+        ;
+        AuthorResponse authorResponse = new AuthorResponse();
+        authorResponse.setContent(content);
+        authorResponse.setPageNo(authors.getNumber());
+        authorResponse.setPageSize(authors.getSize());
+        authorResponse.setTotalElements(authors.getTotalElements());
+        authorResponse.setTotalPages(authors.getTotalPages());
+        authorResponse.setLast(authors.isLast());
+        return authorResponse;
     }
 
     private Author mapToEntity(AuthorDTO authorDTO) {
