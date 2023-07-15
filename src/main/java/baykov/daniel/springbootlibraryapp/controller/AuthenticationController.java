@@ -1,5 +1,7 @@
 package baykov.daniel.springbootlibraryapp.controller;
 
+import baykov.daniel.springbootlibraryapp.payload.dto.ChangePasswordDTO;
+import baykov.daniel.springbootlibraryapp.payload.dto.ForgotPasswordDTO;
 import baykov.daniel.springbootlibraryapp.payload.dto.LoginDTO;
 import baykov.daniel.springbootlibraryapp.payload.dto.RegisterDTO;
 import baykov.daniel.springbootlibraryapp.payload.response.JWTAuthenticationResponse;
@@ -36,8 +38,25 @@ public class AuthenticationController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @PatchMapping("/{userId}/changePassword")
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO,
+                                                 @PathVariable Long userId) {
+        return ResponseEntity.ok(authenticationService.changePassword(changePasswordDTO, userId));
+    }
+
     @GetMapping("confirm")
-    public ResponseEntity<String> confirm(@RequestParam String token) {
+    public ResponseEntity<String> confirmPassword(@RequestParam String token) {
         return ResponseEntity.ok(confirmationTokenService.confirmToken(token));
+    }
+
+    @PostMapping("forgot")
+    public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+        return ResponseEntity.ok(authenticationService.forgotPassword(forgotPasswordDTO));
+    }
+
+    @PutMapping("reset")
+    public ResponseEntity<String> resetPassword(@RequestParam String token,
+                                                @Valid @RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+        return ResponseEntity.ok(authenticationService.resetPassword(forgotPasswordDTO, token));
     }
 }
