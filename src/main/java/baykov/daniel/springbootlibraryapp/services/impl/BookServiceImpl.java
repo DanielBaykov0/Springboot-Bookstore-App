@@ -1,52 +1,59 @@
 package baykov.daniel.springbootlibraryapp.services.impl;
 
+import baykov.daniel.springbootlibraryapp.entities.Author;
 import baykov.daniel.springbootlibraryapp.entities.Book;
+import baykov.daniel.springbootlibraryapp.exceptions.LibraryHTTPException;
 import baykov.daniel.springbootlibraryapp.exceptions.ResourceNotFoundException;
 import baykov.daniel.springbootlibraryapp.payload.dto.BookDTO;
 import baykov.daniel.springbootlibraryapp.payload.response.BookResponse;
-import baykov.daniel.springbootlibraryapp.repositories.PaperBookRepository;
-import baykov.daniel.springbootlibraryapp.services.PaperBookService;
+import baykov.daniel.springbootlibraryapp.repositories.AuthorRepository;
+import baykov.daniel.springbootlibraryapp.repositories.BookRepository;
+import baykov.daniel.springbootlibraryapp.services.BookService;
+import baykov.daniel.springbootlibraryapp.utils.Messages;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class PaperBookServiceImpl implements PaperBookService {
+public class BookServiceImpl implements BookService {
 
-    private final PaperBookRepository paperBookRepository;
+    private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
     private final ModelMapper mapper;
 
-    public PaperBookServiceImpl(PaperBookRepository paperBookRepository, ModelMapper mapper) {
-        this.paperBookRepository = paperBookRepository;
+    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository, ModelMapper mapper) {
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
         this.mapper = mapper;
     }
 
     @Override
-    public BookDTO createPaperBook(BookDTO bookDTO) {
+    public BookDTO createBook(BookDTO bookDTO) {
         Book book = mapToEntity(bookDTO);
-        Book newBook = paperBookRepository.save(book);
+        Book newBook = bookRepository.save(book);
         return mapToDTO(newBook);
     }
 
     @Override
-    public BookDTO getPaperBookById(long id) {
-        Book book = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+    public BookDTO getBookById(long id) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
         return mapToDTO(book);
     }
 
     @Override
-    public BookResponse getAllPaperBooks(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public BookResponse getAllBooks(int pageNo, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Book> allPaperBooks = paperBookRepository.findAll(pageable);
+        Page<Book> allPaperBooks = bookRepository.findAll(pageable);
 
         List<Book> bookList = allPaperBooks.getContent();
 
@@ -62,37 +69,43 @@ public class PaperBookServiceImpl implements PaperBookService {
     }
 
     @Override
-    public BookDTO updatePaperBook(BookDTO bookDTO, long id) {
-        Book book = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+    public BookDTO updateBookByBookId(BookDTO bookDTO, long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+        Author author = authorRepository.findById(bookDTO.getAuthorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Author", "id", bookDTO.getAuthorId()));
+        if (bookDTO.getNumberOfCopiesAvailable() > bookDTO.getNumberOfCopiesTotal()) {
+            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.AVAILABLE_BOOKS_BIGGER_THAN_TOTAL_MESSAGE);
+        }
+
         book.setTitle(bookDTO.getTitle());
-        book.setAuthor(bookDTO.getAuthor());
+        book.setAuthor(author);
         book.setGenre(bookDTO.getGenre());
+        book.setPublicationYear(bookDTO.getPublicationYear());
         book.setDescription(bookDTO.getDescription());
-        book.setBorrowedDate(bookDTO.getBorrowedDate());
+        book.setISBN(bookDTO.getISBN());
         book.setNumberOfCopiesTotal(bookDTO.getNumberOfCopiesTotal());
         book.setNumberOfCopiesAvailable(bookDTO.getNumberOfCopiesAvailable());
-        book.setISBN(bookDTO.getISBN());
-        book.setBookType("PAPER");
-
-        Book newBook = paperBookRepository.save(book);
-        return mapToDTO(newBook);
+        book.setReadingLink(bookDTO.getReadingLink());
+        book.setDownloadLink(bookDTO.getDownloadLink());
+        return mapToDTO(bookRepository.save(book));
     }
 
     @Override
-    public void deletePaperBook(long id) {
-        Book book = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
-        paperBookRepository.delete(book);
+    public void deleteBookByBookId(long id) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+        bookRepository.delete(book);
     }
 
     @Override
     public void updateNumberOfBooksAfterBorrowing(Long id) {
-        Book book = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
         book.setNumberOfCopiesAvailable(book.getNumberOfCopiesAvailable() - 1);
     }
 
     @Override
     public void updateNumberOfBooksAfterReturning(Long id) {
-        Book book = paperBookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
         book.setNumberOfCopiesAvailable(book.getNumberOfCopiesAvailable() + 1);
     }
 
