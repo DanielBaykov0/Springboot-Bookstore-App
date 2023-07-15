@@ -7,13 +7,13 @@ public interface AuthorService {
 
     AuthorDTO createAuthor(AuthorDTO authorDTO);
 
-    AuthorDTO getAuthorById(long id);
+    AuthorDTO getAuthorById(Long id);
 
     AuthorResponse getAllAuthors(int pageNo, int pageSize, String sortBy, String sortDir);
 
-    AuthorDTO updateAuthorById(AuthorDTO authorDTO, long id);
+    AuthorDTO updateAuthorById(AuthorDTO authorDTO, Long id);
 
-    void deleteAuthorById(long id);
+    void deleteAuthorById(Long id);
 
     AuthorResponse getAllAuthorsByAuthorFirstNameOrAuthorLastNameOrAuthorCountry(String firstName, String lastName, String country, int pageNo, int pageSize, String sortBy, String sortDir);
 }

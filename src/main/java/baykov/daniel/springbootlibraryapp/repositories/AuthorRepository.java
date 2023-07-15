@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {
 
-    Page<Author> findAllByAuthorFirstNameIgnoreCaseOrAuthorLastNameIgnoreCaseOrAuthorCountryIgnoreCase(String firstName, String lastName, String country, Pageable pageable);
+    Page<Author> findAllByFirstNameIgnoreCaseOrLastNameIgnoreCaseOrCountryBornIgnoreCase(String firstName, String lastName, String country, Pageable pageable);
 }

@@ -33,7 +33,7 @@ public class BookDTO {
 
     @NotEmpty(message = "Book ISBN should not be null or empty")
     @Size(min = 13, max = 13, message = "Book ISBN should be 13 characters long")
-    private com.github.ladutsko.isbn.ISBN ISBN;
+    private String ISBN;
 
     @NotNull(message = "Book publication year cannot be null")
     @Min(value = 1400, message = "Book publication year should be between 1400 and 2023")
@@ -42,11 +42,11 @@ public class BookDTO {
 
     @NotNull(message = "Book available copies cannot be a negative number")
     @PositiveOrZero
-    private int numberOfCopiesAvailable;
+    private Integer numberOfCopiesAvailable;
 
     @NotNull(message = "Book total copies cannot be a negative number")
     @PositiveOrZero
-    private int numberOfCopiesTotal;
+    private Integer numberOfCopiesTotal;
 
     @URL
     private String readingLink;

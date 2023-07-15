@@ -13,7 +13,7 @@ public interface UserBookHistoryRepository extends JpaRepository<UserBookHistory
 
     List<UserBookHistory> findByUser(User user);
 
-    Optional<UserBookHistory> findEBookByUserIdAndEBookId(Long userId, Long ebookId);
+    Optional<UserBookHistory> findEBookByUserIdAndBookId(Long userId, Long bookId);
 
     Page<UserBookHistory> findAllEBooksByUserId(Long userId, Pageable pageable);
 }

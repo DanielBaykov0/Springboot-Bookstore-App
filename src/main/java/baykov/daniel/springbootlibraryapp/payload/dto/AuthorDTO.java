@@ -34,6 +34,6 @@ public class AuthorDTO {
     @NotNull(message = "Birth date should not be null")
     @Past
     private LocalDate birthDate;
-    private boolean isAlive;
+    private Boolean isAlive;
     private LocalDate deathDate;
 }

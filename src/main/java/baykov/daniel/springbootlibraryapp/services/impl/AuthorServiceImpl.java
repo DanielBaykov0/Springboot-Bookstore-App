@@ -35,7 +35,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDTO getAuthorById(long id) {
+    public AuthorDTO getAuthorById(Long id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Author", "id", id));
         return mapToDTO(author);
     }
@@ -63,21 +63,21 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDTO updateAuthorById(AuthorDTO authorDTO, long id) {
+    public AuthorDTO updateAuthorById(AuthorDTO authorDTO, Long id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Author", "id", id));
         author.setFirstName(authorDTO.getFirstName());
         author.setLastName(authorDTO.getLastName());
         author.setCountryBorn(authorDTO.getCountryBorn());
         author.setBirthDate(authorDTO.getBirthDate());
         author.setDeathDate(authorDTO.getDeathDate());
-        author.setAlive(authorDTO.isAlive());
+        author.setAlive(authorDTO.getIsAlive());
 
         Author newAuthor = authorRepository.save(author);
         return mapToDTO(newAuthor);
     }
 
     @Override
-    public void deleteAuthorById(long id) {
+    public void deleteAuthorById(Long id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Author", "id", id));
         authorRepository.delete(author);
     }
@@ -87,7 +87,7 @@ public class AuthorServiceImpl implements AuthorService {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Author> content = authorRepository.findAllByAuthorFirstNameIgnoreCaseOrAuthorLastNameIgnoreCaseOrAuthorCountryIgnoreCase(
+        Page<Author> content = authorRepository.findAllByFirstNameIgnoreCaseOrLastNameIgnoreCaseOrCountryBornIgnoreCase(
                 firstName, lastName, country, pageable);
         return getAuthorResponse(content);
     }

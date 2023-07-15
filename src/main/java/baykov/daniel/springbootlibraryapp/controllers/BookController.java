@@ -56,7 +56,7 @@ public class BookController {
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "genre", required = false) String genre,
             @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "year", required = false) int publicationYear,
+            @RequestParam(value = "year", required = false) Long publicationYear,
             @RequestParam(value = "firstName", required = false) String authorFirstName,
             @RequestParam(value = "lastName", required = false) String authorLastName,
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,

@@ -42,7 +42,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDTO getBookById(long id) {
+    public BookDTO getBookById(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
         return mapToDTO(book);
     }
@@ -69,7 +69,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDTO updateBookByBookId(BookDTO bookDTO, long id) {
+    public BookDTO updateBookByBookId(BookDTO bookDTO, Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
         Author author = authorRepository.findById(bookDTO.getAuthorId())
@@ -92,7 +92,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBookByBookId(long id) {
+    public void deleteBookByBookId(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
         bookRepository.delete(book);
     }
@@ -111,11 +111,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookResponse getBooksByTitleOrByGenreOrByDescriptionOrByPublicationYearOrByAuthorName(
-            String title, String genre, String description, int publicationYear, String authorFirstName, String authorLastName, int pageNo, int pageSize, String sortBy, String sortDir) {
+            String title, String genre, String description, Long publicationYear, String authorFirstName, String authorLastName, int pageNo, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Book> content = bookRepository.findBookByTitleContainingIgnoreCaseOrByGenreContainingIgnoreCaseOrByDescriptionIgnoreCaseOrByPublicationYearOrByAuthorFirstNameIgnoreCaseOrByAuthorLastNameIgnoreCase(
+        Page<Book> content = bookRepository.findAllByTitleContainingIgnoreCaseOrGenreContainingIgnoreCaseOrDescriptionIgnoreCaseOrPublicationYearOrAuthorFirstNameIgnoreCaseOrAuthorLastNameIgnoreCase(
                 title, genre, description, publicationYear, authorFirstName, authorFirstName, pageable);
         return getBookResponse(content);
     }
