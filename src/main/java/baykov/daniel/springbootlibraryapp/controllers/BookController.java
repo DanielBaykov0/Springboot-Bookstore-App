@@ -50,4 +50,20 @@ public class BookController {
         bookService.deleteBookByBookId(paperBookId);
         return ResponseEntity.ok(Messages.BOOK_DELETE_MESSAGE);
     }
+
+    @GetMapping("search")
+    public ResponseEntity<BookResponse> getBooksByTitleOrByGenreOrByDescriptionOrByPublicationYearOrByAuthorName(
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "genre", required = false) String genre,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "year", required = false) int publicationYear,
+            @RequestParam(value = "firstName", required = false) String authorFirstName,
+            @RequestParam(value = "lastName", required = false) String authorLastName,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
+        return ResponseEntity.ok(bookService.getBooksByTitleOrByGenreOrByDescriptionOrByPublicationYearOrByAuthorName(
+                title, genre, description, publicationYear, authorFirstName, authorLastName, pageNo, pageSize, sortBy, sortDir));
+    }
 }

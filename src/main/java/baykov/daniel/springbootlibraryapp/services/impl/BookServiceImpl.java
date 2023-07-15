@@ -109,6 +109,30 @@ public class BookServiceImpl implements BookService {
         book.setNumberOfCopiesAvailable(book.getNumberOfCopiesAvailable() + 1);
     }
 
+    @Override
+    public BookResponse getBooksByTitleOrByGenreOrByDescriptionOrByPublicationYearOrByAuthorName(
+            String title, String genre, String description, int publicationYear, String authorFirstName, String authorLastName, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Book> content = bookRepository.findBookByTitleContainingIgnoreCaseOrByGenreContainingIgnoreCaseOrByDescriptionIgnoreCaseOrByPublicationYearOrByAuthorFirstNameIgnoreCaseOrByAuthorLastNameIgnoreCase(
+                title, genre, description, publicationYear, authorFirstName, authorFirstName, pageable);
+        return getBookResponse(content);
+    }
+
+    private BookResponse getBookResponse(Page<Book> books) {
+        List<Book> bookList = books.getContent();
+        List<BookDTO> content = bookList.stream().map(this::mapToDTO).collect(Collectors.toList());
+        BookResponse bookResponse = new BookResponse();
+        bookResponse.setContent(content);
+        bookResponse.setPageNo(books.getNumber());
+        bookResponse.setPageSize(books.getSize());
+        bookResponse.setTotalElements(books.getTotalElements());
+        bookResponse.setPageSize(books.getSize());
+        bookResponse.setLast(books.isLast());
+        return bookResponse;
+    }
+
     private Book mapToEntity(BookDTO bookDTO) {
         return mapper.map(bookDTO, Book.class);
     }

@@ -18,4 +18,7 @@ public interface BookService {
     void updateNumberOfBooksAfterBorrowing(Long id);
 
     void updateNumberOfBooksAfterReturning(Long id);
+
+    BookResponse getBooksByTitleOrByGenreOrByDescriptionOrByPublicationYearOrByAuthorName(
+            String title, String genre, String description, int publicationYear, String authorFirstName, String authorLastName, int pageNo, int pageSize, String sortBy, String sortDir);
 }
