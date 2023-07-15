@@ -1,6 +1,6 @@
 package baykov.daniel.springbootlibraryapp.security;
 
-import baykov.daniel.springbootlibraryapp.repositories.UserRepository;
+import baykov.daniel.springbootlibraryapp.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        baykov.daniel.springbootlibraryapp.entities.User user = userRepository.getUserByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+        baykov.daniel.springbootlibraryapp.entity.User user = userRepository.getUserByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail));
 
         Set<GrantedAuthority> authorities = user

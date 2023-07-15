@@ -1,6 +1,6 @@
 package baykov.daniel.springbootlibraryapp.security;
 
-import baykov.daniel.springbootlibraryapp.exceptions.LibraryHTTPException;
+import baykov.daniel.springbootlibraryapp.exception.LibraryHTTPException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

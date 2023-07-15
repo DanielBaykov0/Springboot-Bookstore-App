@@ -14,4 +14,8 @@ public class Messages {
     public static final String EMAIL_ALREADY_EXISTS_MESSAGE = "Email already exists!";
     public static final String USER_REGISTERED_SUCCESSFULLY_MESSAGE = "User registered successfully!";
     public static final String AVAILABLE_BOOKS_BIGGER_THAN_TOTAL_MESSAGE = "Total Number of Books should be equal or greater than number of Available Books!";
+    public static final String TOKEN_NOT_FOUND_MESSAGE = "Token not found!";
+    public static final String EMAIL_ALREADY_CONFIRMED_MESSAGE = "Email already confirmed!";
+    public static final String TOKEN_EXPIRED_MESSAGE = "Token expired!";
+    public static final String EMAIL_CONFIRMED_SUCCESSFULLY_MESSAGE = "Email successfully confirmed!";
 }
