@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        baykov.daniel.springbootlibraryapp.entity.User user = userRepository.getUserByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+        baykov.daniel.springbootlibraryapp.entity.User user = userRepository.getByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail));
 
         Set<GrantedAuthority> authorities = user

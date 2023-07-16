@@ -63,7 +63,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String login(LoginDTO loginDTO) {
         User user = userRepository
-                .getUserByUsernameOrEmail(loginDTO.getUsernameOrEmail(), loginDTO.getUsernameOrEmail())
+                .getByUsernameOrEmail(loginDTO.getUsernameOrEmail(), loginDTO.getUsernameOrEmail())
                 .orElseThrow(() -> new LibraryHTTPException(HttpStatus.NOT_FOUND, Messages.USER_NOT_EXIST_MESSAGE));
         if (!user.isConfirmed()) {
             throw new LibraryHTTPException(HttpStatus.UNAUTHORIZED, Messages.EMAIL_NOT_CONFIRMED_MESSAGE);
@@ -139,7 +139,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String forgotPassword(ForgotPasswordDTO forgotPasswordDTO) {
         User user = userRepository
-                .getUserByUsernameOrEmail(forgotPasswordDTO.getUsernameOrEmail(), forgotPasswordDTO.getUsernameOrEmail())
+                .getByUsernameOrEmail(forgotPasswordDTO.getUsernameOrEmail(), forgotPasswordDTO.getUsernameOrEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username or email", forgotPasswordDTO.getUsernameOrEmail()));
 
         String userEmail = user.getEmail();

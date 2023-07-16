@@ -168,7 +168,7 @@ public class UserBookHistoryServiceImpl implements UserBookHistoryService {
         Book book = bookRepository.findById(ebookId)
                 .orElseThrow(() -> new ResourceNotFoundException("Book", "id", ebookId));
         UserBookHistory userBookHistory = userBookHistoryRepository
-                .findEBookByUserIdAndBookId(user.getId(), book.getId())
+                .findByUserIdAndBookId(user.getId(), book.getId())
                 .orElseThrow(() -> new LibraryHTTPException(HttpStatus.BAD_REQUEST, Messages.INVALID_USER_AND_BOOK_MESSAGE));
         return mapToDTO(userBookHistory);
     }
@@ -181,7 +181,7 @@ public class UserBookHistoryServiceImpl implements UserBookHistoryService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
-        Page<UserBookHistory> eBookHistories = userBookHistoryRepository.findAllEBooksByUserId(user.getId(), pageable);
+        Page<UserBookHistory> eBookHistories = userBookHistoryRepository.findAllBooksByUserId(user.getId(), pageable);
         return getUserBookHistoryResponse(eBookHistories);
     }
 
