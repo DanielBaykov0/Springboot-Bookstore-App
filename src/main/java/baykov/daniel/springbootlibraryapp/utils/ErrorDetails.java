@@ -1,8 +1,9 @@
 package baykov.daniel.springbootlibraryapp.utils;
 
-import lombok.*;
-
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -10,7 +11,5 @@ import java.util.Date;
 @AllArgsConstructor
 public class ErrorDetails {
 
-    private Date timestamp;
     private String message;
-    private String details;
 }
