@@ -12,11 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "book")
-public class Book {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Book extends BaseEntity {
 
     @Column(nullable = false)
     private String title;
@@ -43,4 +39,17 @@ public class Book {
 
     @Column(unique = true)
     private String downloadLink;
+
+    public void update(Book book, Author author) {
+        this.title = book.getTitle();
+        this.author = author;
+        this.genre = book.getGenre();
+        this.publicationYear = book.getPublicationYear();
+        this.description = book.getDescription();
+        this.ISBN = book.getISBN();
+        this.numberOfCopiesAvailable = book.getNumberOfCopiesAvailable();
+        this.numberOfCopiesTotal = book.getNumberOfCopiesTotal();
+        this.readingLink = book.getReadingLink();
+        this.downloadLink = book.getDownloadLink();
+    }
 }

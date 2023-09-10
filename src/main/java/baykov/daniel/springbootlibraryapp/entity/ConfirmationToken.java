@@ -14,11 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "confirmation_token")
-public class ConfirmationToken {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ConfirmationToken extends BaseEntity {
 
     @Column(nullable = false)
     private String token;

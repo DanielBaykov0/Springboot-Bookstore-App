@@ -1,6 +1,8 @@
 package baykov.daniel.springbootlibraryapp.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,17 +16,22 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "author")
-public class Author {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Author extends BaseEntity {
 
     @Column(nullable = false)
     private String firstName;
     private String lastName;
     private String countryBorn;
     private LocalDate birthDate;
-    private boolean isAlive;
+    private Boolean isAlive;
     private LocalDate deathDate;
+
+    public void update(Author author) {
+        this.firstName = author.getFirstName();
+        this.lastName = author.getLastName();
+        this.countryBorn = author.getCountryBorn();
+        this.birthDate = author.getBirthDate();
+        this.isAlive = author.getIsAlive();
+        this.deathDate = author.getDeathDate();
+    }
 }
