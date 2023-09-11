@@ -1,7 +1,7 @@
 package baykov.daniel.springbootlibraryapp.config;
 
-import baykov.daniel.springbootlibraryapp.security.JWTAuthenticationEntryPoint;
-import baykov.daniel.springbootlibraryapp.security.JWTAuthenticationFilter;
+import baykov.daniel.springbootlibraryapp.security.filter.JWTAuthenticationFilter;
+import baykov.daniel.springbootlibraryapp.security.util.JWTAuthenticationEntryPoint;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +53,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .cors(cors ->
+                        cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(
                         authorize -> authorize.requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                                 .requestMatchers("/api/v1/auth/**").permitAll()
@@ -60,8 +62,10 @@ public class SecurityConfig {
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
