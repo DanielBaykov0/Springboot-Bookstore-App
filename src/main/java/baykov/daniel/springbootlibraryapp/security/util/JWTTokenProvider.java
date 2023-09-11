@@ -1,10 +1,11 @@
-package baykov.daniel.springbootlibraryapp.security;
+package baykov.daniel.springbootlibraryapp.security.util;
 
 import baykov.daniel.springbootlibraryapp.exception.LibraryHTTPException;
+import baykov.daniel.springbootlibraryapp.utils.PropertyVariables;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -13,20 +14,27 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public class JWTTokenProvider {
 
-    @Value("${app.jwt-secret}")
-    private String jwtSecret;
-
-    @Value("${app.jwt-expiration-milliseconds}")
-    private long jwtExpirationDate;
+    private final PropertyVariables propertyVariables;
 
     public String generateToken(Authentication authentication) {
-        String username = authentication.getName();
+        String email = authentication.getName();
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
+        Date expireDate = new Date(currentDate.getTime() + propertyVariables.getJwtExpirationDate());
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(expireDate)
+                .signWith(key())
+                .compact();
+    }
+
+    public String generateTokenFromEmail(String email) {
+        Date expireDate = new Date(new Date().getTime() + propertyVariables.getJwtExpirationDate());
+        return Jwts.builder()
+                .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
                 .signWith(key())
@@ -34,10 +42,10 @@ public class JWTTokenProvider {
     }
 
     private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(propertyVariables.getJwtSecret()));
     }
 
-    public String getUsername(String token) {
+    public String getEmail(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key())
                 .build()
