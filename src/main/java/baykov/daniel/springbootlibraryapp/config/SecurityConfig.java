@@ -5,7 +5,6 @@ import baykov.daniel.springbootlibraryapp.security.util.JWTAuthenticationEntryPo
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -39,6 +39,7 @@ public class SecurityConfig {
 
     private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
+    private final CorrelationFilter correlationFilter;
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -65,7 +66,9 @@ public class SecurityConfig {
                 .exceptionHandling(exception ->
                         exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(correlationFilter, BasicAuthenticationFilter.class);
 
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
@@ -81,13 +84,5 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    @Bean
-    public FilterRegistrationBean<CorrelationFilter> correlationFilter() {
-        FilterRegistrationBean<CorrelationFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new CorrelationFilter());
-        registrationBean.addUrlPatterns("/api/*");
-        return registrationBean;
     }
 }
