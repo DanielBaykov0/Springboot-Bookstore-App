@@ -14,11 +14,11 @@ import lombok.Setter;
 @Table(name = "role")
 public class Role extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
-    private RoleType name;
+    private RoleEnum name;
 
-    public enum RoleType{
+    public enum RoleEnum {
         ADMIN, LIBRARIAN, USER
     }
 }
