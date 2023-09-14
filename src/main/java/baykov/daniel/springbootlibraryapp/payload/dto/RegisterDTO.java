@@ -26,6 +26,10 @@ public class RegisterDTO {
     @Size(min = 8, max = 20, message = "Password should be between 8 and 20 characters")
     private String password;
 
+    @NotEmpty(message = "Matching Password should not be null or empty")
+    @Size(min = 8, max = 20, message = "Matching Password should be between 8 and 20 characters")
+    private String matchingPassword;
+
     @NotNull(message = "Birthday should not be empty")
     @PastOrPresent
     private LocalDate birthDate;
