@@ -19,7 +19,7 @@ public class JWTTokenProvider {
 
     private final PropertyVariables propertyVariables;
 
-    public String generateToken(Authentication authentication) {
+    public String generateAccessToken(Authentication authentication) {
         String email = authentication.getName();
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + propertyVariables.getJwtExpirationDate());
@@ -31,8 +31,10 @@ public class JWTTokenProvider {
                 .compact();
     }
 
-    public String generateTokenFromEmail(String email) {
-        Date expireDate = new Date(new Date().getTime() + propertyVariables.getJwtExpirationDate());
+    public String generateRefreshToken(Authentication authentication) {
+        String email = authentication.getName();
+        Date currentDate = new Date();
+        Date expireDate = new Date(currentDate.getTime() + propertyVariables.getRefreshTokenDurationMs());
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
@@ -54,7 +56,7 @@ public class JWTTokenProvider {
         return claims.getSubject();
     }
 
-    public boolean validateToke(String token) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key())
