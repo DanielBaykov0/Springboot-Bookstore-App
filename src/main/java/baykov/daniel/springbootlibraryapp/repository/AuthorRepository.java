@@ -1,18 +1,20 @@
 package baykov.daniel.springbootlibraryapp.repository;
 
 import baykov.daniel.springbootlibraryapp.entity.Author;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-@Tag(name = "Author Repository")
 public interface AuthorRepository extends JpaRepository<Author, Long> {
 
-    @Operation(
-            summary = "Get Author By First Name, Last Name Or Country",
-            description = "Get Author By First Name, Last Name Or Country is used to get all authors by first name, last name or country from the database"
-    )
-    Page<Author> findAllByFirstNameIgnoreCaseOrLastNameIgnoreCaseOrCountryBornIgnoreCase(String firstName, String lastName, String country, Pageable pageable);
+    Page<Author> findAllByCountryId(Long countryId, Pageable pageable);
+
+    Page<Author> findAllByCityId(Long cityId, Pageable pageable);
+
+    @Query("SELECT a from Author a " +
+            "WHERE (:name IS NULL OR CONCAT(LOWER(a.firstName), ' ', LOWER(a.lastName)) LIKE %:name%) " +
+            "AND (:country IS NULL OR LOWER(a.country) LIKE %:country%) " +
+            "AND (:city IS NULL OR LOWER(a.city) LIKE %:city%)")
+    Page<Author> findBySearchParams(String name, String country, String city, Pageable pageable);
 }
