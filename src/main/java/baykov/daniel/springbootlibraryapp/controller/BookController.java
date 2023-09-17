@@ -1,29 +1,29 @@
 package baykov.daniel.springbootlibraryapp.controller;
 
+import baykov.daniel.springbootlibraryapp.constant.AppConstants;
 import baykov.daniel.springbootlibraryapp.payload.dto.BookDTO;
 import baykov.daniel.springbootlibraryapp.payload.response.BookResponse;
 import baykov.daniel.springbootlibraryapp.service.BookService;
-import baykov.daniel.springbootlibraryapp.utils.AppConstants;
-import baykov.daniel.springbootlibraryapp.utils.Messages;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static baykov.daniel.springbootlibraryapp.constant.AppConstants.*;
+import static baykov.daniel.springbootlibraryapp.constant.Messages.BOOK_DELETED;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1/books")
 @Tag(name = "CRUD REST APIs for Book Resource")
 public class BookController {
 
     private final BookService bookService;
-
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
 
     @Operation(
             summary = "Create Book REST API",
@@ -52,9 +52,9 @@ public class BookController {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @GetMapping("{id}")
-    public ResponseEntity<BookDTO> getBookById(@PathVariable(name = "id") Long paperBookId) {
-        return ResponseEntity.ok(bookService.getBookById(paperBookId));
+    @GetMapping("/{bookId}")
+    public ResponseEntity<BookDTO> getBookById(@PathVariable Long bookId) {
+        return ResponseEntity.ok(bookService.getBookById(bookId));
     }
 
     @Operation(
@@ -70,10 +70,10 @@ public class BookController {
     )
     @GetMapping
     public ResponseEntity<BookResponse> getAllBooks(
-            @RequestParam(name = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
-            @RequestParam(name = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-            @RequestParam(name = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
-            @RequestParam(name = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
+            @RequestParam(name = "pageNo", defaultValue = DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(name = "sortBy", defaultValue = DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(name = "sortDir", defaultValue = DEFAULT_SORT_DIR, required = false) String sortDir) {
         return ResponseEntity.ok(bookService.getAllBooks(pageNo, pageSize, sortBy, sortDir));
     }
 
@@ -88,10 +88,10 @@ public class BookController {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @PutMapping("{id}")
-    public ResponseEntity<BookDTO> updateBookById(@PathVariable(name = "id") Long paperBookId,
-                                                  @Valid @RequestBody BookDTO bookDTO) {
-        return ResponseEntity.ok(bookService.updateBookByBookId(bookDTO, paperBookId));
+    @PutMapping("/{bookId}")
+    public ResponseEntity<BookDTO> updateBookById(
+            @PathVariable Long bookId, @Valid @RequestBody BookDTO bookDTO) {
+        return ResponseEntity.ok(bookService.updateBookByBookId(bookId, bookDTO));
     }
 
     @Operation(
@@ -105,16 +105,15 @@ public class BookController {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteBookById(@PathVariable(name = "id") Long paperBookId) {
-        bookService.deleteBookByBookId(paperBookId);
-        return ResponseEntity.ok(Messages.BOOK_DELETE_MESSAGE);
+    @DeleteMapping("/{bookId}")
+    public ResponseEntity<String> deleteBookById(@PathVariable Long bookId) {
+        bookService.deleteBookByBookId(bookId);
+        return ResponseEntity.ok(BOOK_DELETED);
     }
 
     @Operation(
-            summary = "Get Books By Title, Genre, Description, Publication year or Author name REST API",
-            description = "Search Books By Title, Genre, Description, Publication year or Author name REST API " +
-                    "is used to search books by title, genre, description, publication year or author name in the database"
+            summary = "Get Books By Title REST API",
+            description = "Search Books By Title REST API is used to search books by title in the database"
     )
     @ApiResponse(
             responseCode = "200",
@@ -123,19 +122,57 @@ public class BookController {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @GetMapping("search")
-    public ResponseEntity<BookResponse> getBooksByTitleOrByGenreOrByDescriptionOrByPublicationYearOrByAuthorName(
+    @GetMapping
+    public ResponseEntity<BookResponse> getBooksByTitle(
             @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "genre", required = false) String genre,
-            @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "year", required = false) Long publicationYear,
-            @RequestParam(value = "firstName", required = false) String authorFirstName,
-            @RequestParam(value = "lastName", required = false) String authorLastName,
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
-        return ResponseEntity.ok(bookService.getBooksByTitleOrByGenreOrByDescriptionOrByPublicationYearOrByAuthorName(
-                title, genre, description, publicationYear, authorFirstName, authorLastName, pageNo, pageSize, sortBy, sortDir));
+        return ResponseEntity.ok(bookService.getAllBooksByTitle(title, pageNo, pageSize, sortBy, sortDir));
+    }
+
+    // swagger info
+    @GetMapping
+    public ResponseEntity<BookResponse> getBooksByAuthorName(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
+        return ResponseEntity.ok(bookService.getAllBooksByAuthorName(name, pageNo, pageSize, sortBy, sortDir));
+    }
+
+    // swagger info
+    @GetMapping
+    public ResponseEntity<BookResponse> getBooksByDescription(
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
+        return ResponseEntity.ok(bookService.getAllBooksByDescription(description, pageNo, pageSize, sortBy, sortDir));
+    }
+
+    // swagger info
+    @GetMapping
+    public ResponseEntity<BookResponse> getBooksByGenre(
+            @RequestParam(value = "genre", required = false) String genre,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
+        return ResponseEntity.ok(bookService.getAllBooksByGenre(genre, pageNo, pageSize, sortBy, sortDir));
+    }
+
+    // swagger info
+    @GetMapping
+    public ResponseEntity<BookResponse> getBooksByPublicationYear(
+            @RequestParam(value = "year", required = false) int publicationYear,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
+        return ResponseEntity.ok(bookService.getAllBooksByPublicationYear(publicationYear, pageNo, pageSize, sortBy, sortDir));
     }
 }
