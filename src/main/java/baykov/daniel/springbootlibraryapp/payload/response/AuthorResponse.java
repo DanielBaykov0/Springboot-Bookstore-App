@@ -10,5 +10,5 @@ import java.util.List;
 @Setter
 public class AuthorResponse extends GeneralResponse {
 
-    List<AuthorDTO> content;
+    private List<AuthorDTO> content;
 }
