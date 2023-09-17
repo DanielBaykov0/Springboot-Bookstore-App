@@ -1,29 +1,27 @@
 package baykov.daniel.springbootlibraryapp.controller;
 
+import baykov.daniel.springbootlibraryapp.constant.AppConstants;
+import baykov.daniel.springbootlibraryapp.constant.Messages;
 import baykov.daniel.springbootlibraryapp.payload.dto.AuthorDTO;
 import baykov.daniel.springbootlibraryapp.payload.response.AuthorResponse;
 import baykov.daniel.springbootlibraryapp.service.AuthorService;
-import baykov.daniel.springbootlibraryapp.utils.AppConstants;
-import baykov.daniel.springbootlibraryapp.utils.Messages;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/authors")
+@RequiredArgsConstructor
+@RequestMapping("api/v1")
 @Tag(name = "CRUD REST APIs for Author Resource")
 public class AuthorController {
 
     private final AuthorService authorService;
-
-    public AuthorController(AuthorService authorService) {
-        this.authorService = authorService;
-    }
 
     @Operation(
             summary = "Create Author REST API",
@@ -36,9 +34,12 @@ public class AuthorController {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @PostMapping
-    public ResponseEntity<AuthorDTO> createAuthor(@Valid @RequestBody AuthorDTO authorDTO) {
-        return new ResponseEntity<>(authorService.createAuthor(authorDTO), HttpStatus.CREATED);
+    @PostMapping("/counties/{countryId}/cities/{cityId}/authors")
+    public ResponseEntity<AuthorDTO> createAuthor(
+            @Valid @RequestBody AuthorDTO authorDTO,
+            @PathVariable Long countryId,
+            @PathVariable Long cityId) {
+        return new ResponseEntity<>(authorService.createAuthor(countryId, cityId, authorDTO), HttpStatus.CREATED);
     }
 
     @Operation(
@@ -52,9 +53,33 @@ public class AuthorController {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @GetMapping("{id}")
-    public ResponseEntity<AuthorDTO> getAuthor(@PathVariable(name = "id") Long authorId) {
+    @GetMapping("/authors/{authorId}")
+    public ResponseEntity<AuthorDTO> getAuthor(@PathVariable Long authorId) {
         return ResponseEntity.ok(authorService.getAuthorById(authorId));
+    }
+
+    // swagger info
+    @GetMapping("/countries/{countryId}/authors")
+    public ResponseEntity<AuthorResponse> getAllAuthorsByCountry(
+            @PathVariable Long countryId,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
+        AuthorResponse authorResponse = authorService.getAllAuthorsByCountryId(countryId, pageNo, pageSize, sortBy, sortDir);
+        return ResponseEntity.ok(authorResponse);
+    }
+
+    // swagger info
+    @GetMapping("/cities/{cityId}/authors")
+    public ResponseEntity<AuthorResponse> getAllAuthorsByCity(
+            @PathVariable Long cityId,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
+        AuthorResponse authorResponse = authorService.getAllAuthorsByCityId(cityId, pageNo, pageSize, sortBy, sortDir);
+        return ResponseEntity.ok(authorResponse);
     }
 
     @Operation(
@@ -68,7 +93,7 @@ public class AuthorController {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @GetMapping
+    @GetMapping("/authors")
     public ResponseEntity<AuthorResponse> getAllAuthors(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
@@ -88,8 +113,8 @@ public class AuthorController {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @PutMapping("{id}")
-    public ResponseEntity<AuthorDTO> updateAuthorById(@PathVariable(name = "id") Long authorId,
+    @PutMapping("/authors/{authorId}")
+    public ResponseEntity<AuthorDTO> updateAuthorById(@PathVariable Long authorId,
                                                       @Valid @RequestBody AuthorDTO authorDTO) {
         return ResponseEntity.ok(authorService.updateAuthorById(authorDTO, authorId));
     }
@@ -105,10 +130,10 @@ public class AuthorController {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteAuthorById(@PathVariable(name = "id") Long authorId) {
+    @DeleteMapping("/authors/{authorId}")
+    public ResponseEntity<String> deleteAuthorById(@PathVariable Long authorId) {
         authorService.deleteAuthorById(authorId);
-        return ResponseEntity.ok(Messages.AUTHOR_DELETE_MESSAGE);
+        return ResponseEntity.ok(Messages.AUTHOR_DELETED);
     }
 
     @Operation(
@@ -123,16 +148,16 @@ public class AuthorController {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    @GetMapping("search")
-    public ResponseEntity<AuthorResponse> getAllAuthorsByAuthorFirstNameOrAuthorLastNameOrAuthorCountry(
-            @RequestParam(value = "firstName", required = false) String firstName,
-            @RequestParam(value = "lastName", required = false) String lastName,
+    @GetMapping("/authors")
+    public ResponseEntity<AuthorResponse> getAllAuthorsByFirstNameOrLastNameOrCountry(
+            @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "country", required = false) String country,
+            @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
         return ResponseEntity.ok(authorService
-                .getAllAuthorsByAuthorFirstNameOrAuthorLastNameOrAuthorCountry(firstName, lastName, country, pageNo, pageSize, sortBy, sortDir));
+                .getSearchedAuthors(name, country, city, pageNo, pageSize, sortBy, sortDir));
     }
 }
