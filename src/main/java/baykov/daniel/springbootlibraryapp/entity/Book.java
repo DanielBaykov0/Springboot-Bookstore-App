@@ -17,8 +17,8 @@ public class Book extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "author_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinColumn(nullable = false, name = "author_id")
     private Author author;
 
     @Column(nullable = false)
@@ -26,12 +26,16 @@ public class Book extends BaseEntity {
 
     @Column(nullable = false)
     private int publicationYear;
+
     private String description;
 
     @Column(unique = true, nullable = false)
     private String ISBN;
 
+    @Column(nullable = false)
     private int numberOfCopiesAvailable;
+
+    @Column(nullable = false)
     private int numberOfCopiesTotal;
 
     @Column(unique = true)
