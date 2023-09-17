@@ -33,10 +33,10 @@ public class Book extends BaseEntity {
     private String ISBN;
 
     @Column(nullable = false)
-    private int numberOfCopiesAvailable;
+    private int numberOfAvailableCopies;
 
     @Column(nullable = false)
-    private int numberOfCopiesTotal;
+    private int numberOfTotalCopies;
 
     @Column(unique = true)
     private String readingLink;
@@ -51,8 +51,8 @@ public class Book extends BaseEntity {
         this.publicationYear = book.getPublicationYear();
         this.description = book.getDescription();
         this.ISBN = book.getISBN();
-        this.numberOfCopiesAvailable = book.getNumberOfCopiesAvailable();
-        this.numberOfCopiesTotal = book.getNumberOfCopiesTotal();
+        this.numberOfAvailableCopies = book.getNumberOfAvailableCopies();
+        this.numberOfTotalCopies = book.getNumberOfTotalCopies();
         this.readingLink = book.getReadingLink();
         this.downloadLink = book.getDownloadLink();
     }
