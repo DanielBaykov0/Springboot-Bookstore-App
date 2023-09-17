@@ -1,6 +1,5 @@
 package baykov.daniel.springbootlibraryapp.controller;
 
-import baykov.daniel.springbootlibraryapp.constant.AppConstants;
 import baykov.daniel.springbootlibraryapp.payload.dto.CountryDTO;
 import baykov.daniel.springbootlibraryapp.payload.response.CountryResponse;
 import baykov.daniel.springbootlibraryapp.service.CountryService;
@@ -11,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static baykov.daniel.springbootlibraryapp.constant.AppConstants.*;
 import static baykov.daniel.springbootlibraryapp.constant.Messages.COUNTRY_DELETED;
 
 @Slf4j
@@ -33,10 +33,10 @@ public class CountryController {
 
     @GetMapping
     public ResponseEntity<CountryResponse> getAllCountries(
-            @RequestParam(name = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
-            @RequestParam(name = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-            @RequestParam(name = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
-            @RequestParam(name = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
+            @RequestParam(name = "pageNo", defaultValue = DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(name = "sortBy", defaultValue = DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(name = "sortDir", defaultValue = DEFAULT_SORT_DIR, required = false) String sortDir) {
         return ResponseEntity.ok(countryService.getAllCountries(pageNo, pageSize, sortBy, sortDir));
     }
 
