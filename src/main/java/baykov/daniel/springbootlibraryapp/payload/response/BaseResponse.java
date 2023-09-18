@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GeneralResponse {
+public class BaseResponse {
 
     private int pageNo;
     private int pageSize;
