@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,12 +24,19 @@ public class Book extends BaseEntity {
     private Author author;
 
     @Column(nullable = false)
-    private String genre;
+    private Category category;
+
+    @Column(nullable = false)
+    private String language;
 
     @Column(nullable = false)
     private int publicationYear;
 
+    @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
+    private int numberOfPages;
 
     @Column(unique = true, nullable = false)
     private String ISBN;
@@ -38,22 +47,20 @@ public class Book extends BaseEntity {
     @Column(nullable = false)
     private int numberOfTotalCopies;
 
-    @Column(unique = true)
-    private String readingLink;
-
-    @Column(unique = true)
-    private String downloadLink;
+    @Column(nullable = false)
+    private BigDecimal price;
 
     public void update(Book book, Author author) {
         this.title = book.getTitle();
         this.author = author;
-        this.genre = book.getGenre();
+        this.category = book.getCategory();
+        this.language = book.getLanguage();
         this.publicationYear = book.getPublicationYear();
         this.description = book.getDescription();
+        this.numberOfPages = book.getNumberOfPages();
         this.ISBN = book.getISBN();
         this.numberOfAvailableCopies = book.getNumberOfAvailableCopies();
         this.numberOfTotalCopies = book.getNumberOfTotalCopies();
-        this.readingLink = book.getReadingLink();
-        this.downloadLink = book.getDownloadLink();
+        this.price = book.getPrice();
     }
 }
