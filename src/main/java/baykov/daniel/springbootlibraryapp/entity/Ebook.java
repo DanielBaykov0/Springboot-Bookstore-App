@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,34 +14,11 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Entity
 @Table(name = "ebook")
-public class Ebook extends BaseEntity {
-
-    @Column(nullable = false)
-    private String title;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(nullable = false, name = "author_id")
-    private Author author;
-
-    @Column(nullable = false)
-    private Category category;
-
-    @Column(nullable = false)
-    private String language;
-
-    @Column(nullable = false)
-    private int publicationYear;
-
-    @Column(nullable = false)
-    private String description;
+@PrimaryKeyJoinColumn(name = "product_id")
+public class Ebook extends Product {
 
     @Column(nullable = false)
     private int numberOfPages;
-
-    @Column(unique = true, nullable = false)
-    private String ISBN;
-
-    private Boolean isDownloadable;
 
     @Column(nullable = false)
     private String fileFormat;
@@ -49,21 +26,35 @@ public class Ebook extends BaseEntity {
     @Column(nullable = false)
     private String fileSize;
 
-    @Column(nullable = false)
-    private BigDecimal price;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "ebook_author",
+            joinColumns = @JoinColumn(name = "ebook_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private List<Author> authors;
 
-    public void update(Ebook ebook, Author author) {
-        this.title = ebook.getTitle();
-        this.author = author;
-        this.category = ebook.getCategory();
-        this.language = ebook.getLanguage();
-        this.publicationYear = ebook.getPublicationYear();
-        this.description = ebook.getDescription();
-        this.numberOfPages = ebook.getNumberOfPages();
-        this.ISBN = ebook.getISBN();
-        this.isDownloadable = ebook.getIsDownloadable();
-        this.fileFormat = ebook.getFileFormat();
-        this.fileSize = ebook.getFileSize();
-        this.price = ebook.getPrice();
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "ebook_category",
+            joinColumns = @JoinColumn(name = "ebook_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
+
+    public void update(Ebook ebook, List<Author> authors, List<Category> categories) {
+        this.setTitle(ebook.getTitle());
+        this.setLanguage(ebook.getLanguage());
+        this.setPublicationYear(ebook.getPublicationYear());
+        this.setDescription(ebook.getDescription());
+        this.setNumberOfPages(ebook.getNumberOfPages());
+        this.setISBN(ebook.getISBN());
+        this.setFileFormat(ebook.getFileFormat());
+        this.setFileSize(ebook.getFileSize());
+        this.setPrice(ebook.getPrice());
+        this.setAuthors(authors);
+        this.setCategories(categories);
     }
 }

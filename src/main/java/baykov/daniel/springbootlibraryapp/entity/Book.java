@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,53 +14,47 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Entity
 @Table(name = "book")
-public class Book extends BaseEntity {
+@PrimaryKeyJoinColumn(name = "product_id")
+public class Book extends Product {
 
     @Column(nullable = false)
-    private String title;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(nullable = false, name = "author_id")
-    private Author author;
+    private Integer numberOfPages;
 
     @Column(nullable = false)
-    private Category category;
+    private Integer numberOfAvailableCopies;
 
     @Column(nullable = false)
-    private String language;
+    private Integer numberOfTotalCopies;
 
-    @Column(nullable = false)
-    private int publicationYear;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "book_author",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private List<Author> authors;
 
-    @Column(nullable = false)
-    private String description;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "book_category",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
 
-    @Column(nullable = false)
-    private int numberOfPages;
-
-    @Column(unique = true, nullable = false)
-    private String ISBN;
-
-    @Column(nullable = false)
-    private int numberOfAvailableCopies;
-
-    @Column(nullable = false)
-    private int numberOfTotalCopies;
-
-    @Column(nullable = false)
-    private BigDecimal price;
-
-    public void update(Book book, Author author) {
-        this.title = book.getTitle();
-        this.author = author;
-        this.category = book.getCategory();
-        this.language = book.getLanguage();
-        this.publicationYear = book.getPublicationYear();
-        this.description = book.getDescription();
-        this.numberOfPages = book.getNumberOfPages();
-        this.ISBN = book.getISBN();
-        this.numberOfAvailableCopies = book.getNumberOfAvailableCopies();
-        this.numberOfTotalCopies = book.getNumberOfTotalCopies();
-        this.price = book.getPrice();
+    public void update(Book book, List<Author> authors, List<Category> categories) {
+        this.setTitle(book.getTitle());
+        this.setLanguage(book.getLanguage());
+        this.setPublicationYear(book.getPublicationYear());
+        this.setDescription(book.getDescription());
+        this.setNumberOfPages(book.getNumberOfPages());
+        this.setISBN(book.getISBN());
+        this.setNumberOfAvailableCopies(book.getNumberOfAvailableCopies());
+        this.setNumberOfTotalCopies(book.getNumberOfTotalCopies());
+        this.setPrice(book.getPrice());
+        this.setAuthors(authors);
+        this.setCategories(categories);
     }
 }

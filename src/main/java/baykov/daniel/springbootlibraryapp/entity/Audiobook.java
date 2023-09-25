@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,39 +15,11 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Entity
 @Table(name = "audiobook")
-public class Audiobook extends BaseEntity {
-
-    @Column(nullable = false)
-    private String title;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(nullable = false, name = "author_id")
-    private Author author;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(nullable = false, name = "narrator_id")
-    private Narrator narrator;
-
-    @Column(nullable = false)
-    private Category category;
-
-    @Column(nullable = false)
-    private String language;
-
-    @Column(nullable = false)
-    private int publicationYear;
-
-    @Column(nullable = false)
-    private String description;
+@PrimaryKeyJoinColumn(name = "product_id")
+public class Audiobook extends Product {
 
     @Column(nullable = false)
     private BigDecimal duration;
-
-    @Column(unique = true, nullable = false)
-    private String ISBN;
-
-    @Column(nullable = false)
-    private Book isDownloadable;
 
     @Column(nullable = false)
     private String fileFormat;
@@ -54,22 +27,40 @@ public class Audiobook extends BaseEntity {
     @Column(nullable = false)
     private String fileSize;
 
-    @Column(nullable = false)
-    private BigDecimal price;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "audiobook_author",
+            joinColumns = @JoinColumn(name = "audiobook_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private List<Author> authors;
 
-    public void update(Audiobook audiobook, Author author, Narrator narrator) {
-        this.title = audiobook.getTitle();
-        this.author = author;
-        this.narrator = narrator;
-        this.category = audiobook.getCategory();
-        this.language = audiobook.getLanguage();
-        this.publicationYear = audiobook.getPublicationYear();
-        this.description = audiobook.getDescription();
-        this.duration = audiobook.getDuration();
-        this.ISBN = audiobook.getISBN();
-        this.isDownloadable = audiobook.getIsDownloadable();
-        this.fileFormat = audiobook.getFileFormat();
-        this.fileSize = audiobook.getFileSize();
-        this.price = audiobook.getPrice();
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "audiobook_category",
+            joinColumns = @JoinColumn(name = "audiobook_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinColumn(nullable = false, name = "narrator_id")
+    private Narrator narrator;
+
+    public void update(Audiobook audiobook, List<Author> authors, List<Category> categories, Narrator narrator) {
+        this.setTitle(audiobook.getTitle());
+        this.setLanguage(audiobook.getLanguage());
+        this.setPublicationYear(audiobook.getPublicationYear());
+        this.setDescription(audiobook.getDescription());
+        this.setDuration(audiobook.getDuration());
+        this.setISBN(audiobook.getISBN());
+        this.setFileFormat(audiobook.getFileFormat());
+        this.setFileSize(audiobook.getFileSize());
+        this.setPrice(audiobook.getPrice());
+        this.setAuthors(authors);
+        this.setCategories(categories);
+        this.setNarrator(narrator);
     }
 }
