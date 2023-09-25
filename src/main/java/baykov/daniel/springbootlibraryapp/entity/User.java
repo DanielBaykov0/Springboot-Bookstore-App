@@ -49,10 +49,6 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String city;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "library_card_id", referencedColumnName = "id")
-    private LibraryCard libraryCard;
-
     @CreationTimestamp
     private LocalDateTime createdAt;
 
