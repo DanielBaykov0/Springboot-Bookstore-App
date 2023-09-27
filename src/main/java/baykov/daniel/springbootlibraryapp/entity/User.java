@@ -10,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -50,6 +52,7 @@ public class User extends BaseEntity {
     private String city;
 
     @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
@@ -59,26 +62,48 @@ public class User extends BaseEntity {
 
     private Boolean isEmailVerified;
 
+    private Boolean mfaEnabled;
+
+    private String secret;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
 
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
+
+    @OneToOne
+    private Cart cart;
+
     public User(User user, String password, Set<Role> roles) {
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.email = user.getEmail();
-        this.password = password;
-        this.birthDate = user.getBirthDate();
-        this.gender = user.getGender();
-        this.phoneNumber = user.getPhoneNumber();
-        this.address = user.getAddress();
-        this.country = user.getCountry();
-        this.city = user.getCity();
-        this.isEmailVerified = false;
-        this.isActive = true;
-        this.roles = roles;
+        this.setFirstName(user.getFirstName());
+        this.setLastName(user.getLastName());
+        this.setEmail(user.getEmail());
+        this.setPassword(password);
+        this.setBirthDate(user.getBirthDate());
+        this.setGender(user.getGender());
+        this.setPhoneNumber(user.getPhoneNumber());
+        this.setAddress(user.getAddress());
+        this.setCountry(user.getCountry());
+        this.setCity(user.getCity());
+        this.setIsEmailVerified(false);
+        this.setIsActive(true);
+        this.setMfaEnabled(false);
+        this.setRoles(roles);
+    }
+
+    public void update(User user) {
+        if (user.getFirstName() != null) this.setFirstName(user.getFirstName());
+        if (user.getLastName() != null) this.setLastName(user.getLastName());
+        if (user.getEmail() != null) this.setEmail(user.getEmail());
+        if (user.getBirthDate() != null) this.setBirthDate(user.getBirthDate());
+        if (user.getPhoneNumber() != null) this.setPhoneNumber(user.getPhoneNumber());
+        if (user.getAddress() != null) this.setAddress(user.getAddress());
+        if (user.getCountry() != null) this.setCountry(user.getCountry());
+        if (user.getCity() != null) this.setCity(user.getCity());
     }
 
     @Getter
