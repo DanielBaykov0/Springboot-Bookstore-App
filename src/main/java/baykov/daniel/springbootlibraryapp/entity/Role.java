@@ -19,6 +19,6 @@ public class Role extends BaseEntity {
     private RoleEnum name;
 
     public enum RoleEnum {
-        ADMIN, LIBRARIAN, USER
+        ROLE_ADMIN, ROLE_LIBRARIAN, ROLE_USER
     }
 }
