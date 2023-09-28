@@ -72,13 +72,14 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
     private List<Order> orders = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Cart cart;
 
-    public User(User user, String password, Set<Role> roles) {
+    public User(User user, String password, Set<Role> roles, Cart cart) {
         this.setFirstName(user.getFirstName());
         this.setLastName(user.getLastName());
         this.setEmail(user.getEmail());
@@ -93,6 +94,7 @@ public class User extends BaseEntity {
         this.setIsActive(true);
         this.setMfaEnabled(false);
         this.setRoles(roles);
+        this.setCart(cart);
     }
 
     public void update(User user) {
