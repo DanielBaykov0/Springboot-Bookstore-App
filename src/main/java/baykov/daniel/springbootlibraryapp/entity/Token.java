@@ -37,10 +37,10 @@ public class Token extends BaseEntity {
     private TokenType tokenType;
 
     public Token(User user, TokenType tokenType) {
-        this.token = UUID.randomUUID().toString();
-        this.createdAt = LocalDateTime.now();
-        this.expiresAt = LocalDateTime.now().plusMinutes(60);
-        this.user = user;
-        this.tokenType = tokenType;
+        this.setToken(UUID.randomUUID().toString());
+        this.setCreatedAt(LocalDateTime.now());
+        this.setExpiresAt(LocalDateTime.now().plusMinutes(60));
+        this.setUser(user);
+        this.setTokenType(tokenType);
     }
 }
