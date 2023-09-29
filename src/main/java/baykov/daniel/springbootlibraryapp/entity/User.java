@@ -1,10 +1,7 @@
 package baykov.daniel.springbootlibraryapp.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,6 +14,9 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "user")
 public class User extends BaseEntity {
