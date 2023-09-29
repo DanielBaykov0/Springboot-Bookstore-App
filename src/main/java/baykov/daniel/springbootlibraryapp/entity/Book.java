@@ -44,9 +44,13 @@ public class Book extends Product {
     )
     private List<Category> categories;
 
-    public void update(Book book, List<Author> authors, List<Category> categories) {
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<CommentReview> commentsReviews;
+
+    public Book(Book book, List<Author> authors, List<Category> categories) {
         this.setTitle(book.getTitle());
         this.setLanguage(book.getLanguage());
+        this.setProductType(ProductTypeEnum.BOOK);
         this.setPublicationYear(book.getPublicationYear());
         this.setDescription(book.getDescription());
         this.setNumberOfPages(book.getNumberOfPages());
@@ -56,5 +60,20 @@ public class Book extends Product {
         this.setPrice(book.getPrice());
         this.setAuthors(authors);
         this.setCategories(categories);
+    }
+
+    public void update(Book book, List<Author> authors, List<Category> categories) {
+        if (book.getTitle() != null) this.setTitle(book.getTitle());
+        if (book.getLanguage() != null) this.setLanguage(book.getLanguage());
+        this.setProductType(ProductTypeEnum.BOOK);
+        if (book.getPublicationYear() != null) this.setPublicationYear(book.getPublicationYear());
+        if (book.getDescription() != null) this.setDescription(book.getDescription());
+        if (book.getNumberOfPages() != null) this.setNumberOfPages(book.getNumberOfPages());
+        if (book.getISBN() != null) this.setISBN(book.getISBN());
+        if (book.getNumberOfAvailableCopies() != null) this.setNumberOfAvailableCopies(book.getNumberOfAvailableCopies());
+        if (book.getNumberOfTotalCopies() != null) this.setNumberOfTotalCopies(book.getNumberOfTotalCopies());
+        if (book.getPrice() != null) this.setPrice(book.getPrice());
+        if (authors != null) this.setAuthors(authors);
+        if (categories != null) this.setCategories(categories);
     }
 }
