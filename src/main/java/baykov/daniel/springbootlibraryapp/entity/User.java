@@ -66,6 +66,10 @@ public class User extends BaseEntity {
 
     private String secret;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_profile_id")
+    private UserProfile userProfile;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -79,7 +83,7 @@ public class User extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     private Cart cart;
 
-    public User(User user, String password, Set<Role> roles, Cart cart) {
+    public User(User user, String password, UserProfile userProfile, Set<Role> roles, Cart cart) {
         this.setFirstName(user.getFirstName());
         this.setLastName(user.getLastName());
         this.setEmail(user.getEmail());
@@ -92,7 +96,8 @@ public class User extends BaseEntity {
         this.setCity(user.getCity());
         this.setIsEmailVerified(false);
         this.setIsActive(true);
-        this.setMfaEnabled(false);
+        this.setMfaEnabled(userProfile.getMfaEnabled());
+        this.setUserProfile(userProfile);
         this.setRoles(roles);
         this.setCart(cart);
     }
