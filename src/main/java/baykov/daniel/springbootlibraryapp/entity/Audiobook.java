@@ -1,10 +1,7 @@
 package baykov.daniel.springbootlibraryapp.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
@@ -14,6 +11,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
+@Data
 @Entity
 @Table(name = "audiobook")
 @PrimaryKeyJoinColumn(name = "product_id")

@@ -1,15 +1,14 @@
 package baykov.daniel.springbootlibraryapp.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "token_type")
 public class TokenType extends BaseEntity {
