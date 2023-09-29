@@ -1,10 +1,7 @@
 package baykov.daniel.springbootlibraryapp.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -12,6 +9,8 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "author")
 public class Author extends BaseEntity {
@@ -36,22 +35,22 @@ public class Author extends BaseEntity {
     private LocalDate deathDate;
 
     public Author(Author author, Country country, City city) {
-        this.firstName = author.getFirstName();
-        this.lastName = author.getLastName();
-        this.country = country;
-        this.city = city;
-        this.birthDate = author.getBirthDate();
-        this.isAlive = author.getIsAlive();
-        this.deathDate = author.getDeathDate();
+        this.setFirstName(author.getFirstName());
+        this.setLastName(author.getLastName());
+        this.setCountry(country);
+        this.setCity(city);
+        this.setBirthDate(author.getBirthDate());
+        this.setIsAlive(author.getIsAlive());
+        this.setDeathDate(author.getDeathDate());
     }
 
-    public void update(Author author) {
-        this.firstName = author.getFirstName();
-        this.lastName = author.getLastName();
-        this.country = author.getCountry();
-        this.city = author.getCity();
-        this.birthDate = author.getBirthDate();
-        this.isAlive = author.getIsAlive();
-        this.deathDate = author.getDeathDate();
+    public void update(Author author, Country country, City city) {
+        if (author.getFirstName() != null) this.setFirstName(author.getFirstName());
+        if (author.getLastName() != null) this.setLastName(author.getLastName());
+        if (country != null) this.setCountry(country);
+        if (city != null) this.setCity(city);
+        if (author.getBirthDate() != null) this.setBirthDate(author.getBirthDate());
+        if (author.getIsAlive() != null) this.setIsAlive(author.getIsAlive());
+        if (author.getDeathDate() != null) this.setDeathDate(author.getDeathDate());
     }
 }

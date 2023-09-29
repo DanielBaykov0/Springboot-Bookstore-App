@@ -1,10 +1,7 @@
 package baykov.daniel.springbootlibraryapp.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -12,6 +9,8 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "narrator")
 public class Narrator extends BaseEntity {
@@ -39,24 +38,24 @@ public class Narrator extends BaseEntity {
     private LocalDate deathDate;
 
     public Narrator(Narrator narrator, Country country, City city) {
-        this.firstName = narrator.getFirstName();
-        this.lastName = narrator.getLastName();
-        this.biography = narrator.getBiography();
-        this.country = country;
-        this.city = city;
-        this.birthDate = narrator.getBirthDate();
-        this.isAlive = narrator.getIsAlive();
-        this.deathDate = narrator.getDeathDate();
+        this.setFirstName(narrator.getFirstName());
+        this.setLastName(narrator.getLastName());
+        this.setBiography(narrator.getBiography());
+        this.setCountry(country);
+        this.setCity(city);
+        this.setBirthDate(narrator.getBirthDate());
+        this.setIsAlive(narrator.getIsAlive());
+        this.setDeathDate(narrator.getDeathDate());
     }
 
-    public void update(Narrator narrator) {
-        this.firstName = narrator.getFirstName();
-        this.lastName = narrator.getLastName();
-        this.biography = narrator.getBiography();
-        this.country = narrator.getCountry();
-        this.city = narrator.getCity();
-        this.birthDate = narrator.getBirthDate();
-        this.isAlive = narrator.getIsAlive();
-        this.deathDate = narrator.getDeathDate();
+    public void update(Narrator narrator, Country country, City city) {
+        if (narrator.getFirstName() != null)  this.setFirstName(narrator.getFirstName());
+        if (narrator.getLastName() != null) this.setLastName(narrator.getLastName());
+        if (narrator.getBiography() != null) this.setBiography(narrator.getBiography());
+        if (country != null) this.setCountry(country);
+        if (city != null) this.setCity(city);
+        if (narrator.getBirthDate() != null) this.setBirthDate(narrator.getBirthDate());
+        if (narrator.getIsAlive() != null) this.setIsAlive(narrator.getIsAlive());
+        if (narrator.getDeathDate() != null) this.setDeathDate(narrator.getDeathDate());
     }
 }
