@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
@@ -18,7 +19,11 @@ import java.util.List;
 public class Ebook extends Product {
 
     @Column(nullable = false)
-    private int numberOfPages;
+    @Value(value = "1")
+    private Integer numberOfAvailableCopies;
+
+    @Column(nullable = false)
+    private Integer numberOfPages;
 
     @Column(nullable = false)
     private String fileFormat;
@@ -44,17 +49,38 @@ public class Ebook extends Product {
     )
     private List<Category> categories;
 
-    public void update(Ebook ebook, List<Author> authors, List<Category> categories) {
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<CommentReview> commentsReviews;
+
+    public Ebook(Ebook ebook, List<Author> authors, List<Category> categories) {
         this.setTitle(ebook.getTitle());
         this.setLanguage(ebook.getLanguage());
+        this.setProductType(ProductTypeEnum.EBOOK);
         this.setPublicationYear(ebook.getPublicationYear());
         this.setDescription(ebook.getDescription());
         this.setNumberOfPages(ebook.getNumberOfPages());
+        this.setNumberOfAvailableCopies(ebook.getNumberOfAvailableCopies());
         this.setISBN(ebook.getISBN());
         this.setFileFormat(ebook.getFileFormat());
         this.setFileSize(ebook.getFileSize());
         this.setPrice(ebook.getPrice());
         this.setAuthors(authors);
         this.setCategories(categories);
+    }
+
+    public void update(Ebook ebook, List<Author> authors, List<Category> categories) {
+        if (ebook.getTitle() != null) this.setTitle(ebook.getTitle());
+        if (ebook.getLanguage() != null) this.setLanguage(ebook.getLanguage());
+        this.setProductType(ProductTypeEnum.EBOOK);
+        if (ebook.getPublicationYear() != null) this.setPublicationYear(ebook.getPublicationYear());
+        if (ebook.getDescription() != null) this.setDescription(ebook.getDescription());
+        if (ebook.getNumberOfPages() != null) this.setNumberOfPages(ebook.getNumberOfPages());
+        this.setNumberOfAvailableCopies(1);
+        if (ebook.getISBN() != null) this.setISBN(ebook.getISBN());
+        if (ebook.getFileFormat() != null)  this.setFileFormat(ebook.getFileFormat());
+        if (ebook.getFileSize() != null) this.setFileSize(ebook.getFileSize());
+        if (ebook.getPrice() != null) this.setPrice(ebook.getPrice());
+        if (authors != null) this.setAuthors(authors);
+        if (categories != null) this.setCategories(categories);
     }
 }
