@@ -8,16 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    Page<Book> findAllByTitleContainingIgnoreCase(String title, Pageable pageable);
-
-    @Query("SELECT b from Book b " +
-            "JOIN Author a ON b.author_id = a.id " +
-            "WHERE (:name IS NULL OR CONCAT(LOWER(a.firstName), ' ', LOWER(a.lastName)) LIKE %:name%)")
-    Page<Book> findAllByAuthorName(String name, Pageable pageable);
-
-    Page<Book> findAllByDescriptionContainingIgnoreCase(String description, Pageable pageable);
-
-    Page<Book> findAllByGenreContainingIgnoreCase(String genre, Pageable pageable);
-
-    Page<Book> findAllByPublicationYear(int publicationYear, Pageable pageable);
+    @Query("SELECT b FROM Book b " +
+            "JOIN b.authors a " +
+            "JOIN b.categories c " +
+            "WHERE (:title IS NULL OR LOWER(b.title) LIKE CONCAT('%', LOWER(:title), '%')) " +
+            "AND (:authorName IS NULL OR LOWER(CONCAT(a.firstName, ' ', a.lastName)) LIKE CONCAT('%', LOWER(:authorName), '%')) " +
+            "AND (:description IS NULL OR LOWER(b.description) LIKE CONCAT('%', LOWER(:description), '%')) " +
+            "AND (:category IS NULL OR LOWER(c.name) LIKE CONCAT('%', LOWER(:category), '%')) " +
+            "AND (:publicationYear IS NULL OR b.publicationYear = :publicationYear)")
+    Page<Book> findBySearchedParams(String title, String authorName, String description, String category, Integer publicationYear, Pageable pageable);
 }
