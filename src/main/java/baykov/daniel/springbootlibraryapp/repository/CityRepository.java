@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CityRepository extends JpaRepository<City, Long> {
 
-    Page<City> findAllByCountryId(Long countryId, Pageable pageable);
+    Page<City> findAllByCountryNameIgnoreCase(String countryName, Pageable pageable);
 }
