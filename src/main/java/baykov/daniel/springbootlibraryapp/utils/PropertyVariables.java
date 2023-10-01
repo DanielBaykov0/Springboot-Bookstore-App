@@ -28,4 +28,10 @@ public class PropertyVariables {
 
     @Value("${reset.password.uri}")
     private String resetPasswordUri;
+
+    @Value("${api.publishable.test.key}")
+    private String stripePublishableTestKey;
+
+    @Value("${api.secret.test.key}")
+    private String stripeSecretTestKey;
 }
