@@ -1,10 +1,9 @@
 package baykov.daniel.springbootlibraryapp.payload.mapper;
 
 import baykov.daniel.springbootlibraryapp.entity.Author;
-import baykov.daniel.springbootlibraryapp.payload.dto.AuthorDTO;
-import org.mapstruct.InjectionStrategy;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import baykov.daniel.springbootlibraryapp.payload.dto.request.AuthorRequestDTO;
+import baykov.daniel.springbootlibraryapp.payload.dto.response.AuthorResponseDTO;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -13,13 +12,11 @@ import java.util.List;
 public interface AuthorMapper {
     AuthorMapper INSTANCE = Mappers.getMapper(AuthorMapper.class);
 
-    @Mapping(target = "countryId", expression = "java(author.getCountry().getId())")
-    @Mapping(target = "cityId", expression = "java(author.getCity().getId())")
-    AuthorDTO entityToDto(Author author);
+    AuthorResponseDTO entityToDTO(Author author);
 
-    List<AuthorDTO> entityToDto(Iterable<Author> authors);
+    List<AuthorResponseDTO> entityToDTO(Iterable<Author> authors);
 
-    Author dtoToEntity(AuthorDTO authorDTO);
+    Author dtoToEntity(AuthorRequestDTO authorRequestDTO);
 
-    List<Author> dtoToEntity(Iterable<AuthorDTO> authorDTOS);
+    List<Author> dtoToEntity(Iterable<AuthorRequestDTO> authorDTOS);
 }
