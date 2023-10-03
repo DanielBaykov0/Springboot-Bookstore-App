@@ -1,4 +1,4 @@
-package baykov.daniel.springbootlibraryapp.entity;
+package baykov.daniel.springbootbookstoreapp.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
