@@ -21,7 +21,7 @@ import baykov.daniel.springbootbookstoreapp.repository.UserRepository;
 import baykov.daniel.springbootbookstoreapp.security.util.JWTTokenProvider;
 import baykov.daniel.springbootbookstoreapp.service.util.ServiceUtil;
 import baykov.daniel.springbootbookstoreapp.utils.PropertyVariables;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,7 +40,7 @@ import static baykov.daniel.springbootbookstoreapp.constant.Messages.*;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
