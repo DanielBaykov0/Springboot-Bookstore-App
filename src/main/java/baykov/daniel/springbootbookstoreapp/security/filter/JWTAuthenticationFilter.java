@@ -1,6 +1,6 @@
-package baykov.daniel.springbootlibraryapp.security.filter;
+package baykov.daniel.springbootbookstoreapp.security.filter;
 
-import baykov.daniel.springbootlibraryapp.security.util.JWTTokenProvider;
+import baykov.daniel.springbootbookstoreapp.security.util.JWTTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

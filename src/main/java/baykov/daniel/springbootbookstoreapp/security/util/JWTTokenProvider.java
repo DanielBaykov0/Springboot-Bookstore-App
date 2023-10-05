@@ -1,11 +1,10 @@
-package baykov.daniel.springbootlibraryapp.security.util;
+package baykov.daniel.springbootbookstoreapp.security.util;
 
-import baykov.daniel.springbootlibraryapp.exception.LibraryHTTPException;
-import baykov.daniel.springbootlibraryapp.utils.PropertyVariables;
+import baykov.daniel.springbootbookstoreapp.exception.LibraryHTTPException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -13,16 +12,24 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
+import static baykov.daniel.springbootbookstoreapp.constant.ErrorMessages.*;
+
 @Component
-@RequiredArgsConstructor
 public class JWTTokenProvider {
 
-    private final PropertyVariables propertyVariables;
+    @Value("${app.jwt-secret}")
+    private String jwtSecret;
+
+    @Value("${app.jwt-expiration-milliseconds}")
+    private long jwtExpirationDate;
+
+    @Value("${app.jwtRefreshExpiration}")
+    private Long refreshTokenDurationMs;
 
     public String generateAccessToken(Authentication authentication) {
         String email = authentication.getName();
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime() + propertyVariables.getJwtExpirationDate());
+        Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
@@ -34,7 +41,7 @@ public class JWTTokenProvider {
     public String generateRefreshToken(Authentication authentication) {
         String email = authentication.getName();
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime() + propertyVariables.getRefreshTokenDurationMs());
+        Date expireDate = new Date(currentDate.getTime() + refreshTokenDurationMs);
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
@@ -44,7 +51,7 @@ public class JWTTokenProvider {
     }
 
     private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(propertyVariables.getJwtSecret()));
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
     public String getEmail(String token) {
@@ -64,13 +71,13 @@ public class JWTTokenProvider {
                     .parse(token);
             return true;
         } catch (MalformedJwtException e) {
-            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, "Invalid JWT Token");
+            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, INVALID_JWT_TOKEN);
         } catch (ExpiredJwtException e) {
-            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, "Expired JWT Token");
+            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, EXPIRED_JWT_TOKEN);
         } catch (UnsupportedJwtException e) {
-            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, "Unsupported JWT Token");
+            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, UNSUPPORTED_JWT_TOKEN);
         } catch (IllegalArgumentException e) {
-            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, "JWT claim string is empty");
+            throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, JWT_CLAIM_EMPTY);
         }
     }
 }

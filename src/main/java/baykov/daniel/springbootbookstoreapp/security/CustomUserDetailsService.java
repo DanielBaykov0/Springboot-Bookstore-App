@@ -1,6 +1,6 @@
-package baykov.daniel.springbootlibraryapp.security;
+package baykov.daniel.springbootbookstoreapp.security;
 
-import baykov.daniel.springbootlibraryapp.repository.UserRepository;
+import baykov.daniel.springbootbookstoreapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static baykov.daniel.springbootlibraryapp.constant.ErrorMessages.USER_NOT_FOUND_BY_EMAIL;
+import static baykov.daniel.springbootbookstoreapp.constant.ErrorMessages.USER_NOT_FOUND_BY_EMAIL;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        baykov.daniel.springbootlibraryapp.entity.User user = userRepository.findByEmailIgnoreCase(email)
+        baykov.daniel.springbootbookstoreapp.entity.User user = userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_BY_EMAIL + email));
 
         Set<GrantedAuthority> authorities = user
