@@ -114,7 +114,7 @@ public class AuthorService {
     }
 
     public GenericResponse<AuthorResponseDTO> getSearchedAuthors(String name, Long categoryId, Long cityId, int pageNo, int pageSize, String sortBy, String sortDir) {
-        log.info("Getting audiobooks by name: {}, category ID: {}, city ID: {}, page: {}, pageSize: {}, sortBy: {}, sortDir: {}",
+        log.info("Getting authors by name: {}, category ID: {}, city ID: {}, page: {}, pageSize: {}, sortBy: {}, sortDir: {}",
                 name, categoryId, cityId, pageNo, pageSize, sortBy, sortDir);
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
