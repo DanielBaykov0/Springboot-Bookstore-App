@@ -81,7 +81,10 @@ public class CityService {
         log.info("Start updating city with ID: {}", cityId);
         City foundCity = cityRepository.findById(cityId)
                 .orElseThrow(() -> new ResourceNotFoundException(CITY, ID, cityId));
+        Country foundCountry = countryRepository.findById(cityDTO.getCountryId())
+                .orElseThrow(() -> new ResourceNotFoundException(COUNTRY, ID, cityDTO.getCountryId()));
         foundCity.setName(cityDTO.getName());
+        foundCity.setCountry(foundCountry);
         cityRepository.save(foundCity);
         log.info("City with ID {} updated successfully.", cityId);
         return CityMapper.INSTANCE.entityToDTO(foundCity);
