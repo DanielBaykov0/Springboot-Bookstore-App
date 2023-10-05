@@ -1,7 +1,7 @@
-package baykov.daniel.springbootlibraryapp.config;
+package baykov.daniel.springbootbookstoreapp.config;
 
-import baykov.daniel.springbootlibraryapp.security.filter.JWTAuthenticationFilter;
-import baykov.daniel.springbootlibraryapp.security.util.JWTAuthenticationEntryPoint;
+import baykov.daniel.springbootbookstoreapp.security.filter.JWTAuthenticationFilter;
+import baykov.daniel.springbootbookstoreapp.security.util.JWTAuthenticationEntryPoint;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
@@ -63,14 +63,13 @@ public class SecurityConfig {
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
-                .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(correlationFilter, BasicAuthenticationFilter.class);
 
-        httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
