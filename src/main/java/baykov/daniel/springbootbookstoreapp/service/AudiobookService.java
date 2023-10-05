@@ -42,7 +42,7 @@ public class AudiobookService {
     public AudiobookResponseDTO createAudiobook(AudiobookRequestDTO audiobookRequestDTO) {
         log.info("Creating audiobook...");
 
-        List<Author> authors = authorRepository.findAllById(audiobookRequestDTO.getCategoryIDs());
+        List<Author> authors = authorRepository.findAllById(audiobookRequestDTO.getAuthorIDs());
         serviceUtil.validateIDs(audiobookRequestDTO.getAuthorIDs(), authors, AUTHOR);
         log.debug("Fetched authors: {}", authors);
 

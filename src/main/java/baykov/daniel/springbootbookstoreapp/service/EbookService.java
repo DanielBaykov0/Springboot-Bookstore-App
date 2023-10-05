@@ -39,7 +39,7 @@ public class EbookService {
     public EbookResponseDTO createEbook(EbookRequestDTO ebookRequestDTO) {
         log.info("Creating ebook...");
 
-        List<Author> authors = authorRepository.findAllById(ebookRequestDTO.getCategoryIDs());
+        List<Author> authors = authorRepository.findAllById(ebookRequestDTO.getAuthorIDs());
         serviceUtil.validateIDs(ebookRequestDTO.getAuthorIDs(), authors, AUTHOR);
         log.debug("Fetched authors: {}", authors);
 

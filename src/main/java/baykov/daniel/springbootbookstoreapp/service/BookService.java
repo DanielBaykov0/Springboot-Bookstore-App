@@ -42,7 +42,7 @@ public class BookService {
     public BookResponseDTO createBook(BookRequestDTO bookRequestDTO) {
         log.info("Creating book...");
 
-        List<Author> authors = authorRepository.findAllById(bookRequestDTO.getCategoryIDs());
+        List<Author> authors = authorRepository.findAllById(bookRequestDTO.getAuthorIDs());
         serviceUtil.validateIDs(bookRequestDTO.getAuthorIDs(), authors, AUTHOR);
         log.debug("Fetched authors: {}", authors);
 
