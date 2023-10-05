@@ -1,4 +1,4 @@
-package baykov.daniel.springbootlibraryapp.entity;
+package baykov.daniel.springbootbookstoreapp.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -58,7 +58,7 @@ public class Ebook extends Product {
         this.setPublicationYear(ebook.getPublicationYear());
         this.setDescription(ebook.getDescription());
         this.setNumberOfPages(ebook.getNumberOfPages());
-        this.setNumberOfAvailableCopies(ebook.getNumberOfAvailableCopies());
+        this.setNumberOfAvailableCopies(1);
         this.setISBN(ebook.getISBN());
         this.setFileFormat(ebook.getFileFormat());
         this.setFileSize(ebook.getFileSize());
