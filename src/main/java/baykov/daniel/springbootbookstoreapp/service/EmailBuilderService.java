@@ -19,6 +19,7 @@ public class EmailBuilderService {
         context.setVariable("link", confirmationUrl);
         return templateEngine.process("email-on-registration", context);
     }
+
     public String buildResetPasswordEmail(String firstName, String lastName, String resetUrl) {
         Context context = new Context();
         context.setVariable("firstName", firstName);
