@@ -3,12 +3,26 @@ version: "3.8"
 services:
   mysqldb:
     container_name: mysqldb
-    image: mysql
+    image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_DATABASE_PASSWORD}
       MYSQL_DATABASE: my_library
     networks:
       springboot-mysql-net:
+
+  flyway:
+    image: flyway/flyway:latest-alpine
+    command: migrate
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    environment:
+        - FLYWAY_URL=jdbc:mysql://mysqldb:3306/my_library
+        - FLYWAY_USER=${MYSQL_DATABASE_USERNAME}
+        - FLYWAY_PASSWORD=${MYSQL_DATABASE_PASSWORD}
+    depends_on:
+        - mysqldb
+    networks:
+        - springboot-mysql-net
 
   server:
     container_name: springboot-rest
@@ -22,6 +36,18 @@ services:
     networks:
       springboot-mysql-net:
     restart: on-failure
+    depends_on:
+      - mysqldb
+
+  sonarqube:
+    image: sonarqube:latest
+    ports:
+      - "9000:9000"
+      - "9092:9092"
+    environment:
+      - SONARQUBE_JDBC_URL=jdbc:mysql://mysqldb:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance
+      - SONARQUBE_JDBC_USERNAME=${MYSQL_DATABASE_USERNAME}
+      - SONARQUBE_JDBC_PASSWORD=${MYSQL_DATABASE_PASSWORD}
     depends_on:
       - mysqldb
 

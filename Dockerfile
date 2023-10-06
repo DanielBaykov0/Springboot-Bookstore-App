@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17 AS build
+FROM maven:3.8.4-openjdk-17-slim AS build
 LABEL maintainer="danibaikov@gmail.com"
 WORKDIR /app
 COPY . /app
