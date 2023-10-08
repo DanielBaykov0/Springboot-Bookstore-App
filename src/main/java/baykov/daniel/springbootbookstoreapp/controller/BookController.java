@@ -1,0 +1,243 @@
+package baykov.daniel.springbootbookstoreapp.controller;
+
+import baykov.daniel.springbootbookstoreapp.config.RequestData;
+import baykov.daniel.springbootbookstoreapp.constant.AppConstants;
+import baykov.daniel.springbootbookstoreapp.payload.dto.request.BookRequestDTO;
+import baykov.daniel.springbootbookstoreapp.payload.dto.request.CommentReviewRequestDTO;
+import baykov.daniel.springbootbookstoreapp.payload.dto.response.BookResponseDTO;
+import baykov.daniel.springbootbookstoreapp.payload.dto.response.CommentReviewResponseDTO;
+import baykov.daniel.springbootbookstoreapp.payload.response.GenericResponse;
+import baykov.daniel.springbootbookstoreapp.service.BookService;
+import baykov.daniel.springbootbookstoreapp.service.CommentReviewService;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import static baykov.daniel.springbootbookstoreapp.constant.AppConstants.*;
+import static baykov.daniel.springbootbookstoreapp.constant.Messages.BOOK_DELETED;
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("api/v1/books")
+@Tag(name = "REST APIs for Book Resource")
+public class BookController {
+
+    private final BookService bookService;
+    private final CommentReviewService commentReviewService;
+
+    @Operation(
+            summary = "Create Book REST API",
+            description = "Create Book REST API is used to save book into the database"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "Http Status 201 CREATED"
+    )
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    @PreAuthorize("hasAnyRole('ADMIN', 'LIBRARIAN')")
+    @PostMapping
+    public ResponseEntity<BookResponseDTO> createBook(@Valid @RequestBody BookRequestDTO bookRequestDTO) {
+        log.info("Correlation ID: {}. Received request to create a new book: {}", RequestData.getCorrelationId(), bookRequestDTO);
+
+        BookResponseDTO createdBook = bookService.createBook(bookRequestDTO);
+
+        log.info("Correlation ID: {}. Book created successfully: {}", RequestData.getCorrelationId(), bookRequestDTO);
+        return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
+    }
+
+    @Operation(
+            summary = "Get Book REST API",
+            description = "Get Book REST API is used to get a particular book from the database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Http Status 200 SUCCESS"
+    )
+    @GetMapping("/{bookId}")
+    public ResponseEntity<BookResponseDTO> getBookById(@PathVariable Long bookId) {
+        log.info("Correlation ID: {}. Received request to retrieve book with ID: {}", RequestData.getCorrelationId(), bookId);
+
+        BookResponseDTO book = bookService.getBookById(bookId);
+
+        log.info("Correlation ID: {}. Retrieved book successfully with ID {}: {}", RequestData.getCorrelationId(), bookId, book);
+        return ResponseEntity.ok(book);
+    }
+
+    @Operation(
+            summary = "Get All Books REST API",
+            description = "Get All Books REST API is used to get all books from the database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Http Status 200 SUCCESS"
+    )
+    @GetMapping
+    public ResponseEntity<GenericResponse<BookResponseDTO>> getAllBooks(
+            @RequestParam(name = "pageNo", defaultValue = DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(name = "sortBy", defaultValue = DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(name = "sortDir", defaultValue = DEFAULT_SORT_DIR, required = false) String sortDir) {
+        log.info("Correlation ID: {}. Received request to fetch books with parameters: pageNo={}, pageSize={}, sortBy={}, sortDir={}",
+                RequestData.getCorrelationId(), pageNo, pageSize, sortBy, sortDir);
+
+        GenericResponse<BookResponseDTO> booksResponse = bookService.getAllBooks(pageNo, pageSize, sortBy, sortDir);
+
+        log.info("Correlation ID: {}. Fetched books successfully. Total books retrieved: {}", RequestData.getCorrelationId(), booksResponse.getContent().size());
+        return ResponseEntity.ok(booksResponse);
+    }
+
+    @Operation(
+            summary = "Update Book REST API",
+            description = "Update Book REST API is used to update an existing book in the database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Http Status 200 SUCCESS"
+    )
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    @PreAuthorize("hasAnyRole('ADMIN', 'LIBRARIAN')")
+    @PutMapping("/{bookId}")
+    public ResponseEntity<BookResponseDTO> updateBookById(
+            @PathVariable Long bookId, @Valid @RequestBody BookRequestDTO bookRequestDTO) {
+        log.info("Correlation ID: {}. Received request to update book with ID {}: {}", RequestData.getCorrelationId(), bookId, bookRequestDTO);
+
+        BookResponseDTO updatedBook = bookService.updateBookById(bookId, bookRequestDTO);
+
+        log.info("Correlation ID: {}. Book with ID {} updated successfully: {}", RequestData.getCorrelationId(), bookId, bookRequestDTO);
+        return ResponseEntity.ok(updatedBook);
+    }
+
+    @Operation(
+            summary = "Delete Book REST API",
+            description = "Delete Book REST API is used to delete a particular book from the database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Http Status 200 SUCCESS"
+    )
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    @PreAuthorize("hasAnyRole('ADMIN', 'LIBRARIAN')")
+    @DeleteMapping("/{bookId}")
+    public ResponseEntity<String> deleteBookById(@PathVariable Long bookId) {
+        log.info("Correlation ID: {}. Received request to delete book with ID: {}", RequestData.getCorrelationId(), bookId);
+        bookService.deleteBookById(bookId);
+
+        log.info("Correlation ID: {}. Book with ID {} deleted successfully", RequestData.getCorrelationId(), bookId);
+        return ResponseEntity.ok(BOOK_DELETED);
+    }
+
+    @Operation(
+            summary = "Get Books By Searched Params REST API",
+            description = "Get Searched Books REST API is used to fetch books based on search criteria"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Http Status 200 SUCCESS"
+    )
+    @GetMapping("/search")
+    public ResponseEntity<GenericResponse<BookResponseDTO>> getSearchedBooks(
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "author", required = false) String author,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "year", required = false) Integer publicationYear,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir) {
+        log.info("Correlation ID: {}. Received request to get searched books. Title: {}, Author: {}, Description: {}, Category: {}, Publication Year: {}, PageNo: {}, PageSize: {}, SortBy: {}, SortDir: {}",
+                RequestData.getCorrelationId(), title, author, description, category, publicationYear, pageNo, pageSize, sortBy, sortDir);
+
+        GenericResponse<BookResponseDTO> response = bookService.getSearchedBooks(
+                title, author, description, category, publicationYear, pageNo, pageSize, sortBy, sortDir);
+
+        log.info("Correlation ID: {}. Returned {} books based on search criteria.", RequestData.getCorrelationId(), response.getContent().size());
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Post Review REST API",
+            description = "Post Review REST API is used to leave a review for the book"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "Http Status 201 CREATED"
+    )
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/reviews")
+    public ResponseEntity<CommentReviewResponseDTO> postReview(
+            @RequestBody @Valid CommentReviewRequestDTO requestDto,
+            Authentication authentication) {
+        log.info("Correlation ID: {}. Creating a new review.", RequestData.getCorrelationId());
+        String username = authentication.getName();
+        log.debug("Correlation ID: {}. User '{}' is creating a review.", RequestData.getCorrelationId(), username);
+
+        ResponseEntity<CommentReviewResponseDTO> responseEntity =
+                new ResponseEntity<>(commentReviewService.postReview(requestDto, authentication), HttpStatus.CREATED);
+
+        log.info("Correlation ID: {}. New review created.", RequestData.getCorrelationId());
+        return responseEntity;
+    }
+
+    @Operation(
+            summary = "Get All Reviews By Book REST API",
+            description = "Get All Reviews By Book REST API is used to fetch all reviews for the book"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Http Status 200 SUCCESS"
+    )
+    @GetMapping("/{bookId}/reviews")
+    public ResponseEntity<GenericResponse<CommentReviewResponseDTO>> getAllReviewsByBook(
+            @PathVariable Long bookId,
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "3", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "postedAt", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "desc", required = false) String sortDir) {
+        log.info("Correlation ID: {}. Retrieving all reviews by book ID: {}.", RequestData.getCorrelationId(), bookId);
+
+        GenericResponse<CommentReviewResponseDTO> response = commentReviewService.getProductReviewsById(bookId, pageNo, pageSize, sortBy, sortDir);
+
+        log.info("Correlation ID: {}. Retrieved all reviews by book ID: {}.", RequestData.getCorrelationId(), bookId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Get First Rating For Book By User REST API",
+            description = "Get First Rating For Book By User REST API is used to fetch first rating for book by user"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Http Status 200 SUCCESS"
+    )
+    @GetMapping("/{bookId}/reviews/{userEmail}")
+    @Hidden
+    public ResponseEntity<Integer> getFirstRatingForBookByUser(@PathVariable Long bookId, @PathVariable String userEmail) {
+        log.info("Correlation ID: {}. Retrieving the first rating for book with ID {} by user '{}'.", RequestData.getCorrelationId(), bookId, userEmail);
+
+        Integer rating = commentReviewService.getFirstRatingForProductByUser(bookId, userEmail);
+
+        log.debug("Correlation ID: {}. First rating found: {}", RequestData.getCorrelationId(), rating);
+        return ResponseEntity.ok(rating);
+    }
+}
