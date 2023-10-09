@@ -19,6 +19,7 @@ public interface AudiobookMapper {
 
     @Mapping(target = "authorNames", expression = "java(mapAuthorsNames(audiobook))")
     @Mapping(target = "categoryNames", expression = "java(mapCategoriesNames(audiobook))")
+    @Mapping(target = "narratorId", expression = "java(audiobook.getNarrator().getId())")
     AudiobookResponseDTO entityToDTO(Audiobook audiobook);
 
     List<AudiobookResponseDTO> entityToDTO(Iterable<Audiobook> audiobooks);
