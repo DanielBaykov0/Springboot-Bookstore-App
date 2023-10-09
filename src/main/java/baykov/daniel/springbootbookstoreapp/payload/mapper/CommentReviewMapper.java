@@ -38,6 +38,10 @@ public interface CommentReviewMapper {
                 ? commentReview.getUpdatedAt()
                 : commentReview.getPostedAt();
 
+        if (displayedDate == null) {
+            return "";
+        }
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return displayedDate.format(formatter);
     }
