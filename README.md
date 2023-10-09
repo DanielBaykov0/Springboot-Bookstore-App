@@ -5,8 +5,7 @@
 The RESTful bookstore application is designed for seamless user interaction,
 offering a user-centric interface for browsing and ordering products. Security is a priority,
 employing JWT and refresh tokens to protect user data. Email notifications keep users
-informed about orders and important updates. The application features dynamic discounts to
-enhance user engagement. Automated testing using Docker ensures application reliability and robustness.
+informed about orders and important updates. Testing services and controllers ensures application reliability and robustness.
 Comprehensive logging captures a range of events for effective monitoring and troubleshooting.
 Altogether, it delivers a secure, engaging, and efficient platform for book enthusiasts.
 
@@ -27,6 +26,8 @@ Altogether, it delivers a secure, engaging, and efficient platform for book enth
 ## Photos
 
 ### Project photos
+
+https://github.com/DanielBaykov0/Springboot-Bookstore-App/tree/master/photos
 
 ### Test coverage photo
 
