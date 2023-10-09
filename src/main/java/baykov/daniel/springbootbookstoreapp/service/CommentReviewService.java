@@ -61,6 +61,14 @@ public class CommentReviewService {
             throw new ResourceNotFoundException(PRODUCT_TYPE, TYPE, productType.name());
         }
 
+        commentReview.setUser(user);
+        commentReview.setProduct(product);
+        commentReview.setComment(commentReviewRequestDTO.getComment());
+        commentReview.setRating(commentReviewRequestDTO.getRating());
+        commentReviewRepository.save(commentReview);
+        product.setAverageRating(commentReviewRepository.findAverageRatingByProductId(product.getId()));
+        productRepository.save(product);
+
         log.info("Product review posted successfully!");
         return CommentReviewMapper.INSTANCE.entityToDTO(commentReview);
     }
