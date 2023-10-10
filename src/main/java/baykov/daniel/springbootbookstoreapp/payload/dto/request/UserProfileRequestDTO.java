@@ -32,7 +32,7 @@ public class UserProfileRequestDTO {
     @PastOrPresent
     private LocalDate birthDate;
 
-    @Schema(description = "Phone number of the user", example = "0887 08 08 08")
+    @Schema(description = "Phone number of the user", example = "0887080808")
     @NotEmpty(message = "Phone number should not be null or empty.")
     @Size(min = 10, max = 10, message = "Phone number should have exactly 10 characters.")
     private String phoneNumber;
