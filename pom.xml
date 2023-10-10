@@ -155,7 +155,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>baykov.daniel.springbootbookstoreapp.SpringbootBookstoreAppApplication</mainClass>
+                            <mainClass>baykov.daniel.springbootbookstoreapp.SpringbootBookstoreAppApplication
+                            </mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -171,6 +172,13 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Dspring.profiles.active=dev</argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>
