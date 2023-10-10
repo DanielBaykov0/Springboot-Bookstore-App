@@ -42,7 +42,7 @@ public class AuthenticationController {
             responseCode = "201",
             description = "Http Status 201 CREATED"
     )
-    @PostMapping(value = "register")
+    @PostMapping(value = "/register")
     public ResponseEntity<Map<String, String>> register(@Valid @RequestBody RegisterDTO registerDTO) {
         log.info("Correlation ID: {}. Received request to register a new user.", RequestData.getCorrelationId());
 
@@ -172,7 +172,7 @@ public class AuthenticationController {
     @PatchMapping("/change-password")
     public ResponseEntity<Map<String, String>> changePassword(
             @Valid @RequestBody ChangePasswordDTO changePasswordDTO,
-            @PathVariable String token) {
+            @RequestParam String token) {
         log.info("Change password request received. Correlation ID: {}", RequestData.getCorrelationId());
 
         Map<String, String> response = authenticationService.changePassword(changePasswordDTO, token);
@@ -189,7 +189,7 @@ public class AuthenticationController {
             responseCode = "200",
             description = "Http Status 200 SUCCESS"
     )
-    @PostMapping("forgot")
+    @PostMapping("/forgot")
     public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordDTO forgotPasswordDTO) {
         log.info("Forgot password request received. Correlation ID: {}", RequestData.getCorrelationId());
 
@@ -207,7 +207,7 @@ public class AuthenticationController {
             responseCode = "200",
             description = "Http Status 200 SUCCESS"
     )
-    @PostMapping("resend-forgot")
+    @PostMapping("/resend-forgot")
     public ResponseEntity<Map<String, String>> resendForgotPassword(@RequestParam String token) {
         log.info("Resend forgot password request received. Correlation ID: {}", RequestData.getCorrelationId());
 
@@ -229,14 +229,14 @@ public class AuthenticationController {
             name = "Bearer Authentication"
     )
     @PreAuthorize("hasAnyRole('ADMIN', 'LIBRARIAN', 'USER')")
-    @PostMapping("send-email-verification")
+    @PostMapping("/send-email-verification")
     public ResponseEntity<Map<String, String>> sendEmailVerification(Authentication authentication) {
         log.info("Sending email verification request received. Correlation ID: {}", RequestData.getCorrelationId());
 
         Map<String, String> response = authenticationService.sendEmailVerification(authentication.getName());
 
         log.info("Sending email verification request completed. Correlation ID: {}", RequestData.getCorrelationId());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -248,7 +248,7 @@ public class AuthenticationController {
             description = "Http Status 200 SUCCESS"
     )
     @PreAuthorize("hasAnyRole('ADMIN', 'LIBRARIAN', 'USER')")
-    @GetMapping("verify-email")
+    @GetMapping("/verify-email")
     public ResponseEntity<Map<String, String>> verifyEmail(@RequestParam String token) {
         log.info("Verification email request received. Correlation ID: {}", RequestData.getCorrelationId());
 
