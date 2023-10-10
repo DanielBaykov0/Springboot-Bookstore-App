@@ -54,6 +54,7 @@ public class UserProfile extends BaseEntity {
     public UserProfile(UserProfile userProfile) {
         this.setFirstName(userProfile.getFirstName());
         this.setLastName(userProfile.getLastName());
+        this.setEmail(userProfile.getEmail());
         this.setBirthDate(userProfile.getBirthDate());
         this.setPhoneNumber(userProfile.getPhoneNumber());
         this.setAddress(userProfile.getAddress());
