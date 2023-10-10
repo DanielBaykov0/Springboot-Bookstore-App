@@ -95,7 +95,8 @@ public class CommentReviewService {
                 .orElseThrow(() -> new ResourceNotFoundException(USER, EMAIL, userEmail));
 
         if (commentReviewRepository.existsByUserIdAndProductId(user.getId(), product.getId())) {
-            CommentReview foundCommentReview = commentReviewRepository.findFirstReviewByUser(user.getId());
+            List<CommentReview> reviews = commentReviewRepository.findAllByUserIdAndProductIdOrderByUpdatedAtDesc(user.getId(), product.getId());
+            CommentReview foundCommentReview = reviews.get(0);
             log.info("Found existing review with rating: {}", foundCommentReview.getRating());
             return foundCommentReview.getRating();
         }
