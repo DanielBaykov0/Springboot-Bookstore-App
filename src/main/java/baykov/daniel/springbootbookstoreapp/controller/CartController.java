@@ -64,7 +64,7 @@ public class CartController {
     )
     @PreAuthorize("hasAnyRole('ADMIN', 'LIBRARIAN', 'USER')")
     @PostMapping("/remove")
-    public ResponseEntity<CartResponseDTO> removeToCart(@Valid @RequestBody CartRequestDTO cartRequestDTO, Authentication authentication) {
+    public ResponseEntity<CartResponseDTO> removeFromCart(@Valid @RequestBody CartRequestDTO cartRequestDTO, Authentication authentication) {
         log.info("Correlation ID: {}. Received request to remove from cart. User: {}, Product ID: {}, Product Type: {}, Quantity: {}",
                 RequestData.getCorrelationId(), authentication.getName(), cartRequestDTO.getProductId(), cartRequestDTO.getProductType(), cartRequestDTO.getQuantity());
 
