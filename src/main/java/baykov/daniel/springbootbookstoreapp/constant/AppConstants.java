@@ -29,5 +29,6 @@ public class AppConstants {
     public static final String ID = "ID";
     public static final String IDS = "IDs";
     public static final String TYPE = "type";
-    public static final String TOKEN = "token";
+    public static final String TOKEN = "Token";
+    public static final String VALUE = "value";
 }
