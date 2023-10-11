@@ -140,10 +140,13 @@ class AudiobookServiceTest {
         Long audiobookId = 1L;
         List<Author> authors = new ArrayList<>();
         List<Category> categories = new ArrayList<>();
+        Narrator narrator = new Narrator();
+        narrator.setId(1L);
 
         Audiobook returnObject = new Audiobook();
         returnObject.setAuthors(authors);
         returnObject.setCategories(categories);
+        returnObject.setNarrator(narrator);
         when(audiobookRepository.findById(longArgumentCaptor.capture())).thenReturn(Optional.of(returnObject));
 
         AudiobookResponseDTO retrievedAudiobook = audiobookService.getAudiobookById(audiobookId);

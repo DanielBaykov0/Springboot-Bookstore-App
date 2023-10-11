@@ -149,18 +149,6 @@ class ServiceUtilTest {
     }
 
     @Test
-    void testCheckTokenValid_ReturnTokenInvalidException() {
-        String token = "notExpiredToken";
-
-        Token notExpiredToken = new Token();
-        notExpiredToken.setExpiresAt(LocalDateTime.now());
-
-        when(tokenRepository.findByToken(token)).thenReturn(Optional.of(notExpiredToken));
-
-        serviceUtil.checkTokenValid(token);
-    }
-
-    @Test
     void testCheckTokenValid_Success() {
         String token = "notValidToken";
 
@@ -191,6 +179,21 @@ class ServiceUtilTest {
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
         Assertions.assertEquals(PREVIOUS_TOKEN_EXPIRED, exception.getMessage());
+    }
+
+    @Test
+    void testCheckTokenValid_ReturnTokenInvalidException() {
+        String token = "notExpiredToken";
+
+        when(tokenRepository.findByToken(token)).thenReturn(Optional.empty());
+
+        LibraryHTTPException exception = Assertions.assertThrows(
+                LibraryHTTPException.class,
+                () -> serviceUtil.checkTokenValid(token)
+        );
+
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+        Assertions.assertEquals(TOKEN_NOT_FOUND, exception.getMessage());
     }
 
     @Test

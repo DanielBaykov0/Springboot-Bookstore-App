@@ -136,8 +136,14 @@ class AuthorServiceTest {
     @Test
     void testGetAuthorById_ReturnAuthorResponseDTO() {
         Long authorId = 1L;
+        Country country = new Country("Country");
+        country.setId(1L);
+        City city = new City("city", country);
+        city.setId(1L);
 
         Author returnObject = new Author();
+        returnObject.setCountry(country);
+        returnObject.setCity(city);
         when(authorRepository.findById(longArgumentCaptor.capture())).thenReturn(Optional.of(returnObject));
 
         AuthorResponseDTO retrievedAuthor = authorService.getAuthorById(authorId);
