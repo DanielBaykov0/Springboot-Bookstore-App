@@ -16,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import static baykov.daniel.springbootbookstoreapp.constant.AppConstants.TOKEN_TYPE;
-import static baykov.daniel.springbootbookstoreapp.constant.AppConstants.TYPE;
+import static baykov.daniel.springbootbookstoreapp.constant.AppConstants.*;
 import static baykov.daniel.springbootbookstoreapp.constant.ErrorMessages.*;
 
 @Slf4j
@@ -33,7 +32,7 @@ public class TokenService {
     public void validateToken(String token, TokenType.TokenTypeEnum tokenTypeName) {
         log.info("Validating confirmation token for token type: {}", tokenTypeName);
         Token foundToken = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new LibraryHTTPException(HttpStatus.NOT_FOUND, TOKEN_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(TOKEN, VALUE, token));
 
         if (foundToken.getConfirmedAt() != null) {
             log.warn("Token validation failed for token type: {}. Email already confirmed.", tokenTypeName);
