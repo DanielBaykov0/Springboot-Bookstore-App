@@ -247,7 +247,6 @@ public class AuthenticationController {
             responseCode = "200",
             description = "Http Status 200 SUCCESS"
     )
-    @PreAuthorize("hasAnyRole('ADMIN', 'LIBRARIAN', 'USER')")
     @GetMapping("/verify-email")
     public ResponseEntity<Map<String, String>> verifyEmail(@RequestParam String token) {
         log.info("Verification email request received. Correlation ID: {}", RequestData.getCorrelationId());
