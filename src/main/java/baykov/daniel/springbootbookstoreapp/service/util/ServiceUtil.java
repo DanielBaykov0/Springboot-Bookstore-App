@@ -195,7 +195,6 @@ public class ServiceUtil {
         log.info("Removed {} ebook copies from the cart. Ebook ID: {}", quantity, ebook.getId());
         user.getCart().removeProduct(ebook, quantity);
 
-        productRepository.save(ebook);
         log.info("Ebook removal from cart completed for user: {} - Ebook ID: {}", user.getId(), ebook.getId());
     }
 
@@ -243,7 +242,6 @@ public class ServiceUtil {
         user.getCart().removeProduct(audiobook, quantity);
         log.info("Removed {} copy of audiobook from the cart. Audiobook ID: {}", quantity, audiobook.getId());
 
-        productRepository.save(audiobook);
         log.info("Audiobook removal from the cart completed successfully.");
     }
 
