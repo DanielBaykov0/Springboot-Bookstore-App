@@ -128,7 +128,7 @@ public class ServiceUtil {
         productRepository.save(book);
     }
 
-    public void handleRemoveBookToCart(User user, Book book, Integer quantity) {
+    public void handleRemoveBookFromCart(User user, Book book, Integer quantity) {
         log.info("Handling removal of book from cart for user: {} - Book ID: {} - Quantity: {}", user.getId(), book.getId(), quantity);
 
         if (quantity > user.getCart().getProductQuantity(book)) {
@@ -179,7 +179,7 @@ public class ServiceUtil {
         log.info("Added to cart ebook with ID {}", ebook.getId());
     }
 
-    public void handleRemoveEbookToCart(User user, Ebook ebook, Integer quantity) {
+    public void handleRemoveEbookFromCart(User user, Ebook ebook, Integer quantity) {
         log.info("Handling removal of ebook from cart for user: {} - Ebook ID: {} - Quantity: {}", user.getId(), ebook.getId(), quantity);
 
         if (quantity > user.getCart().getProductQuantity(ebook)) {
@@ -227,7 +227,7 @@ public class ServiceUtil {
         log.info("Added {} copy of audiobook to the cart. Audiobook ID: {}", quantity, audiobook.getId());
     }
 
-    public void handleRemoveAudiobookToCart(User user, Audiobook audiobook, Integer quantity) {
+    public void handleRemoveAudiobookFromCart(User user, Audiobook audiobook, Integer quantity) {
         log.info("Handling removal of audiobook from cart for user: {} - Audiobook ID: {} - Quantity: {}", user.getId(), audiobook.getId(), quantity);
 
         if (quantity > user.getCart().getProductQuantity(audiobook)) {

@@ -78,13 +78,13 @@ public class CartService {
 
         switch (product.getProductType()) {
             case BOOK:
-                serviceUtil.handleRemoveBookToCart(user, (Book) product, cartRequestDTO.getQuantity());
+                serviceUtil.handleRemoveBookFromCart(user, (Book) product, cartRequestDTO.getQuantity());
                 break;
             case EBOOK:
-                serviceUtil.handleRemoveEbookToCart(user, (Ebook) product, cartRequestDTO.getQuantity());
+                serviceUtil.handleRemoveEbookFromCart(user, (Ebook) product, cartRequestDTO.getQuantity());
                 break;
             case AUDIOBOOK:
-                serviceUtil.handleRemoveAudiobookToCart(user, (Audiobook) product, cartRequestDTO.getQuantity());
+                serviceUtil.handleRemoveAudiobookFromCart(user, (Audiobook) product, cartRequestDTO.getQuantity());
                 break;
             default:
                 throw new LibraryHTTPException(HttpStatus.BAD_REQUEST, UNKNOWN_PRODUCT_TYPE);
