@@ -206,7 +206,7 @@ public class AuthenticationService {
                 emailBuilderService.buildResetPasswordEmail(
                         user.getFirstName(),
                         user.getLastName(),
-                        propertyVariables.getResetPasswordUri() + token));
+                        propertyVariables.getResetPasswordUri() + newToken));
 
         log.info("Resent Forgot Password email to user with email: {}", user.getEmail());
         return Map.of(MESSAGE, SUCCESSFULLY_RESEND_FORGOT_PASSWORD);
