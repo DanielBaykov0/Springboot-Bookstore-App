@@ -15,7 +15,7 @@
     <description>Spring Boot Bookstore App</description>
     <properties>
         <java.version>17</java.version>
-        <sonar.token>sqa_96889bc33a919ccb28b0bd425aeac3964cd30d16</sonar.token>
+        <sonar.token></sonar.token>
     </properties>
     <dependencies>
         <dependency>
@@ -178,9 +178,29 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>-Dspring.profiles.active=dev</argLine>
+                    <argLine>@{argLine} -Dspring.profiles.active=test</argLine>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.10</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
