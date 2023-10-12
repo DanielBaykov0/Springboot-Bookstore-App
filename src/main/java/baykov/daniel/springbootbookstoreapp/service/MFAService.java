@@ -36,7 +36,6 @@ public class MFAService {
         try {
             imageData = generator.generate(data);
         } catch (QrGenerationException e) {
-            e.printStackTrace();
             log.error("Error generating QR-CODE");
         }
 
