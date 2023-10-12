@@ -31,6 +31,8 @@ https://github.com/DanielBaykov0/Springboot-Bookstore-App/tree/master/photos
 
 ### Test coverage photo
 
+![test_coverage](photos/tests/test_coverage.png)
+
 ## Setup backend environment
 
 **0. Open cmd with "Run as administrator"**
