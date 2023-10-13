@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
-            "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+            "^[\\w.-]+@(?:[\\w-]+\\.)+[\\w-]{2,4}$");
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext context) {
