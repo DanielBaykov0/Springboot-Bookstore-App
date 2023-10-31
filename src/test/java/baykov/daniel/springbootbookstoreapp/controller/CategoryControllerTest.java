@@ -1,7 +1,10 @@
 package baykov.daniel.springbootbookstoreapp.controller;
 
+import baykov.daniel.springbootbookstoreapp.entity.Category;
 import baykov.daniel.springbootbookstoreapp.payload.dto.CategoryDTO;
+import baykov.daniel.springbootbookstoreapp.repository.CategoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,6 +29,14 @@ class CategoryControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @BeforeEach
+    void setUp() {
+        categoryRepository.deleteAll();
+    }
+
     @Test
     @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN", "LIBRARIAN"})
     void testCreateCategory_Success() throws Exception {
@@ -42,6 +53,9 @@ class CategoryControllerTest {
 
     @Test
     void testGetCategoryById_Success() throws Exception {
+        Category category = new Category("Category");
+        categoryRepository.save(category);
+
         Long categoryId = 1L;
 
         mockMvc.perform(get("/api/v1/categories/{categoryId}", categoryId))
@@ -62,12 +76,14 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN", "LIBRARIAN"})
-    void updateCategoryById() throws Exception {
-        Long categoryId = 1L;
+    void testUpdateCategoryById_Success() throws Exception {
+        Category savedCategory = new Category("name");
+        categoryRepository.save(savedCategory);
+
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setName("Updated name");
 
-        mockMvc.perform(put("/api/v1/categories/{categoryId}", categoryId)
+        mockMvc.perform(put("/api/v1/categories/{categoryId}", savedCategory.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryDTO)))
                 .andExpect(status().isOk())
@@ -77,10 +93,11 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN", "LIBRARIAN"})
-    void deleteCategoryById() throws Exception {
-        Long categoryId = 1L;
+    void testDeleteCategoryById_Success() throws Exception {
+        Category savedCategory = new Category("name");
+        categoryRepository.save(savedCategory);
 
-        mockMvc.perform(delete("/api/v1/categories/{categoryId}", categoryId))
+        mockMvc.perform(delete("/api/v1/categories/{categoryId}", savedCategory.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.valueOf("text/plain;charset=UTF-8")))
                 .andExpect(content().string(CATEGORY_DELETED));

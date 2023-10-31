@@ -1,7 +1,10 @@
 package baykov.daniel.springbootbookstoreapp.controller;
 
+import baykov.daniel.springbootbookstoreapp.entity.Country;
 import baykov.daniel.springbootbookstoreapp.payload.dto.CountryDTO;
+import baykov.daniel.springbootbookstoreapp.repository.CountryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,6 +29,14 @@ class CountryControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private CountryRepository countryRepository;
+
+    @BeforeEach
+    void setUp() {
+        countryRepository.deleteAll();
+    }
+
     @Test
     @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN", "LIBRARIAN"})
     void testCreateCountry_Success() throws Exception {
@@ -42,6 +53,9 @@ class CountryControllerTest {
 
     @Test
     void testGetCountryById_Success() throws Exception {
+        Country country = new Country("Country");
+        countryRepository.save(country);
+
         Long countryId = 1L;
 
         mockMvc.perform(get("/api/v1/countries/{countryId}", countryId))
@@ -63,11 +77,13 @@ class CountryControllerTest {
     @Test
     @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN", "LIBRARIAN"})
     void testUpdateCountryById_Success() throws Exception {
-        Long countryId = 1L;
+        Country savedCountry = new Country("name");
+        countryRepository.save(savedCountry);
+
         CountryDTO countryDTO = new CountryDTO();
         countryDTO.setName("Updated name");
 
-        mockMvc.perform(put("/api/v1/countries/{countryId}", countryId)
+        mockMvc.perform(put("/api/v1/countries/{countryId}", savedCountry.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(countryDTO)))
                 .andExpect(status().isOk())
@@ -78,9 +94,10 @@ class CountryControllerTest {
     @Test
     @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN", "LIBRARIAN"})
     void testDeleteCountryById_Success() throws Exception {
-        Long countryId = 1L;
+        Country savedCountry = new Country("name");
+        countryRepository.save(savedCountry);
 
-        mockMvc.perform(delete("/api/v1/countries/{countryId}", countryId))
+        mockMvc.perform(delete("/api/v1/countries/{countryId}", savedCountry.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.valueOf("text/plain;charset=UTF-8")))
                 .andExpect(content().string(COUNTRY_DELETED));

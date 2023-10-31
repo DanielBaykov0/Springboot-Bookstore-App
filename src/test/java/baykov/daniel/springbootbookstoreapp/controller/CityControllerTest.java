@@ -1,7 +1,11 @@
 package baykov.daniel.springbootbookstoreapp.controller;
 
+import baykov.daniel.springbootbookstoreapp.entity.City;
+import baykov.daniel.springbootbookstoreapp.entity.Country;
 import baykov.daniel.springbootbookstoreapp.payload.dto.CityDTO;
+import baykov.daniel.springbootbookstoreapp.repository.CityRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,6 +30,15 @@ class CityControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private CityRepository cityRepository;
+
+
+    @BeforeEach
+    void setUp() {
+        cityRepository.deleteAll();
+    }
+
     @Test
     @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN", "LIBRARIAN"})
     void testCreateCity_Success() throws Exception {
@@ -44,6 +57,9 @@ class CityControllerTest {
 
     @Test
     void testGetCityById_Success() throws Exception {
+        City city = new City("City", new Country("Country"));
+        cityRepository.save(city);
+
         Long cityId = 1L;
 
         mockMvc.perform(get("/api/v1/cities/{cityId}", cityId))
@@ -65,12 +81,14 @@ class CityControllerTest {
     @Test
     @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN", "LIBRARIAN"})
     void testUpdateCityById_Success() throws Exception {
-        Long cityId = 1L;
+        City savedCity = new City("City", new Country("Country"));
+        cityRepository.save(savedCity);
+
         CityDTO cityDTO = new CityDTO();
         cityDTO.setName("Updated name");
         cityDTO.setCountryId(1L);
 
-        mockMvc.perform(put("/api/v1/cities/{cityId}", cityId)
+        mockMvc.perform(put("/api/v1/cities/{cityId}", savedCity.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(cityDTO)))
                 .andExpect(status().isOk())
@@ -82,9 +100,10 @@ class CityControllerTest {
     @Test
     @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN", "LIBRARIAN"})
     void deleteCityById() throws Exception {
-        Long cityId = 1L;
+        City savedCity = new City("City", new Country("Country"));
+        cityRepository.save(savedCity);
 
-        mockMvc.perform(delete("/api/v1/cities/{cityId}", cityId))
+        mockMvc.perform(delete("/api/v1/cities/{cityId}", savedCity.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.valueOf("text/plain;charset=UTF-8")))
                 .andExpect(content().string(CITY_DELETED));
@@ -92,9 +111,10 @@ class CityControllerTest {
 
     @Test
     void getAllCitiesByCountryName() throws Exception {
-        String countryName = "Bulgaria";
+        City savedCity = new City("City", new Country("Country"));
+        cityRepository.save(savedCity);
 
-        mockMvc.perform(get("/api/v1/cities/search?countryName=", countryName))
+        mockMvc.perform(get("/api/v1/cities/search?countryName=", savedCity.getCountry().getName()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content").isArray())
